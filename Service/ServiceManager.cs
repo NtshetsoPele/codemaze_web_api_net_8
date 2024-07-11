@@ -1,4 +1,4 @@
-﻿namespace Service_;
+﻿namespace Service;
 
 public sealed class ServiceManager(IRepositoryManager repoManager, ILoggerManager logger)
     : IServiceManager

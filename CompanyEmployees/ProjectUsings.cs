@@ -10,4 +10,4 @@ global using NLog;
 global using Microsoft.AspNetCore.Mvc;
 global using LoggerService;
 global using Service.Contracts;
-global using Service_;
+global using Service;

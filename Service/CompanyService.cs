@@ -1,4 +1,4 @@
-﻿namespace Service_;
+﻿namespace Service;
 
 internal sealed class CompanyService(IRepositoryManager repository, ILoggerManager logger) : ICompanyService
 {
