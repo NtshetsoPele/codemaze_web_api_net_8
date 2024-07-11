@@ -1,8 +1,17 @@
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCors();
+LogManager
+    .Setup()
+    .LoadConfigurationFromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "nlog.config"));
+
+builder.Services.ConfigureCors();
 builder.Services.ConfigureIisIntegration();
+builder.Services.ConfigureLoggerService();
+builder.Services.ConfigureRepositoryManager();
+builder.Services.ConfigureServiceManager();
+builder.Services.ConfigureSqlContext(builder.Configuration);
+
 builder.Services.AddControllers();
 
 var app = builder.Build();

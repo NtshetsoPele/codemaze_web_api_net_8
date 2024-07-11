@@ -1,35 +1,17 @@
-using Microsoft.AspNetCore.Mvc;
+namespace CompanyEmployees.Controllers;
 
-namespace CompanyEmployees.Controllers
+[ApiController]
+[Route("[controller]")]
+public class WeatherForecastController(ILoggerManager logger) : ControllerBase
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    [HttpGet]
+    public IEnumerable<string> Get()
     {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
+        logger.LogDebug("Debug test log.");
+        logger.LogWarn("Warn test log.");
+        logger.LogInfo("Info test log.");
+        logger.LogError("Error test log.");
 
-        private readonly ILogger<WeatherForecastController> _logger;
-
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
-        {
-            _logger = logger;
-        }
-
-        [HttpGet]
-        public IEnumerable<WeatherForecast> Get()
-        {
-            throw new Exception();
-            
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
-        }
+        return ["vale1", "value2"];
     }
 }
