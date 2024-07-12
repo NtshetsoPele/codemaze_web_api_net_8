@@ -1,40 +1,41 @@
 
-var builder = WebApplication.CreateBuilder(args);
-
-LogManager
-    .Setup()
-    .LoadConfigurationFromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "nlog.config"));
-
-builder.Services.ConfigureCors();
-builder.Services.ConfigureIisIntegration();
-builder.Services.ConfigureLoggerService();
-builder.Services.ConfigureRepositoryManager();
-builder.Services.ConfigureServiceManager();
-builder.Services.ConfigureSqlContext(builder.Configuration);
-
-builder.Services.AddControllers();
-
-var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
+try
 {
-    app.UseDeveloperExceptionPage();
+    LoggerSetup.SetupLogging();
+    
+    LogManager
+        .GetCurrentClassLogger()
+        .Info("App starting up.");
 }
-else
+catch (Exception logSetupFailureEx)
 {
-    app.UseHsts();
+    EventViewerReporter.ReportError(logSetupFailureEx);
+
+    throw;
 }
 
-app.UseHttpsRedirection();
-//app.UseStaticFiles(); No static content available
-app.UseForwardedHeaders(new ForwardedHeadersOptions
+try
 {
-    ForwardedHeaders = ForwardedHeaders.All
-}); 
-app.UseCors("CorsPolicy");
+    WebApplication
+        .CreateBuilder(args)
+        .RegisterServices()
+        .Build()
+        .ConfigurePipeline()
+        .Run();
+}
+catch (Exception appFailureEx)
+{
+    LogManager
+        .GetCurrentClassLogger()
+        .Fatal(appFailureEx);
+    
+    throw;
+}
+finally
+{
+    LogManager
+        .GetCurrentClassLogger()
+        .Info("App shutting down.");
 
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
+    LogManager.Shutdown();
+}

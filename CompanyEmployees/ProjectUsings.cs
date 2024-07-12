@@ -11,3 +11,7 @@ global using Microsoft.AspNetCore.Mvc;
 global using LoggerService;
 global using Service.Contracts;
 global using Service;
+global using CompanyEmployees.StartupAncillaries;
+global using NLog.Web;
+global using System.Diagnostics;
+global using CompanyEmployees;

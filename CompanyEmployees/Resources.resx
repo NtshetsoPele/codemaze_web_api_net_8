@@ -119,11 +119,22 @@
   </resheader>
   <data name="EnvVar" xml:space="preserve">
     <value>ASPNETCORE_ENVIRONMENT</value>
+    <comment>Indicates the running environment </comment>
+  </data>
+  <data name="EventViewerSource" xml:space="preserve">
+    <value>CompanyEmployees</value>
+    <comment>Event viewer source</comment>
   </data>
   <data name="MainAppSettings" xml:space="preserve">
     <value>appsettings.json</value>
+    <comment>Main app settings file</comment>
+  </data>
+  <data name="NLogConfig" xml:space="preserve">
+    <value>nlog.config</value>
+    <comment>Logging settings file</comment>
   </data>
   <data name="SqlConn" xml:space="preserve">
     <value>sqlConnection</value>
+    <comment>Name of the SQL connection in the appsettings.json file</comment>
   </data>
 </root>

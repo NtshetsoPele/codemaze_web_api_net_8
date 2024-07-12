@@ -70,11 +70,29 @@ namespace CompanyEmployees {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to CompanyEmployees.
+        /// </summary>
+        internal static string EventViewerSource {
+            get {
+                return ResourceManager.GetString("EventViewerSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to appsettings.json.
         /// </summary>
         internal static string MainAppSettings {
             get {
                 return ResourceManager.GetString("MainAppSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to nlog.config.
+        /// </summary>
+        internal static string NLogConfig {
+            get {
+                return ResourceManager.GetString("NLogConfig", resourceCulture);
             }
         }
         
