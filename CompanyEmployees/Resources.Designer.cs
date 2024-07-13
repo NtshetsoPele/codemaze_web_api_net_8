@@ -106,6 +106,15 @@ namespace CompanyEmployees {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to application/json.
+        /// </summary>
+        public static string JsonContent {
+            get {
+                return ResourceManager.GetString("JsonContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to appsettings.json.
         /// </summary>
         public static string MainAppSettings {

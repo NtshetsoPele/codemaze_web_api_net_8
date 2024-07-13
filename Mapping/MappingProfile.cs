@@ -7,6 +7,6 @@ public class MappingProfile : Profile
         CreateMap<Company, ToClientCompany>()
             .ForMember((ToClientCompany c) => c.FullAddress, 
                 memberOptions: (IMemberConfigurationExpression<Company, ToClientCompany, string> opts) => 
-                    opts.MapFrom((Company c) => string.Join(",", c.Address, c.Country)));
+                    opts.MapFrom((Company c) => string.Join(", ", c.Address, c.Country)));
     }
 }

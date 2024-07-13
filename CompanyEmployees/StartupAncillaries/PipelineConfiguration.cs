@@ -4,14 +4,12 @@ public static class PipelineConfiguration
 {
     public static WebApplication ConfigurePipeline(this WebApplication app)
     {
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseDeveloperExceptionPage();
-        }
-        else
+        if (app.Environment.IsProduction())
         {
             app.UseHsts();
         }
+        
+        app.UseExceptionHandler((IApplicationBuilder opts) => { });
 
         app.UseHttpsRedirection();
         //app.UseStaticFiles(); No static content available

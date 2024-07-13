@@ -17,3 +17,6 @@ global using System.Reflection;
 global using CompanyEmployees;
 global using Presentation;
 global using Mapping;
+global using Microsoft.AspNetCore.Diagnostics;
+global using Entities.ErrorModel;
+global using CompanyEmployees.ExceptionHandler;

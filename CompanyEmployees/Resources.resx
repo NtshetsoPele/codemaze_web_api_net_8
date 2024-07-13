@@ -137,6 +137,10 @@
     <value>CompanyEmployees</value>
     <comment>Event viewer source</comment>
   </data>
+  <data name="JsonContent" xml:space="preserve">
+    <value>application/json</value>
+    <comment>Error response content type</comment>
+  </data>
   <data name="MainAppSettings" xml:space="preserve">
     <value>appsettings.json</value>
     <comment>Main app settings file</comment>

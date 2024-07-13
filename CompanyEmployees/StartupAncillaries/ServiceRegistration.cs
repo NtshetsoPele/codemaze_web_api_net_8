@@ -16,6 +16,7 @@ public static class ServiceRegistration
     private static void AddCustomServices(WebAppBuilder builder)
     {
         builder.Services
+            .AddExceptionHandler<GlobalExceptionHandler>()
             .ConfigureCors()
             .ConfigureIisIntegration()
             .ConfigureLoggerService()
