@@ -1,4 +1,5 @@
 ﻿using IServices = Microsoft.Extensions.DependencyInjection.IServiceCollection;
+using IConfig = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace CompanyEmployees.Extensions;
 
@@ -23,7 +24,7 @@ public static class ServiceExtensions
         return services.Configure<IISOptions>(options => { });
     }
 
-    // Not needed. Plugged into the "Host"'s logging framework.
+    // Not needed. Plugged into the "Hosts" logging framework.
     public static IServices ConfigureLoggerService(this IServices services)
     {
         return services.AddSingleton<ILoggerManager, LoggerManager>();
@@ -39,7 +40,7 @@ public static class ServiceExtensions
         return services.AddScoped<IServiceManager, ServiceManager>();
     }
 
-    public static IServices ConfigureSqlContext(this IServices services, IConfiguration config)
+    public static IServices ConfigureSqlContext(this IServices services, IConfig config)
     {
         return services.AddDbContext<RepositoryContext>((DbContextOptionsBuilder opts) =>
             opts.UseSqlServer(config.GetConnectionString(Resources.SqlConn)));

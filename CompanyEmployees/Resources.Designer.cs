@@ -22,7 +22,7 @@ namespace CompanyEmployees {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resources {
+    public class Resources {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace CompanyEmployees {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CompanyEmployees.Resources", typeof(Resources).Assembly);
@@ -51,7 +51,7 @@ namespace CompanyEmployees {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,9 +61,27 @@ namespace CompanyEmployees {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string AppShutdownMessage {
+            get {
+                return ResourceManager.GetString("AppShutdownMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to CorsPolicy.
+        /// </summary>
+        public static string CorsPolicy {
+            get {
+                return ResourceManager.GetString("CorsPolicy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ASPNETCORE_ENVIRONMENT.
         /// </summary>
-        internal static string EnvVar {
+        public static string EnvVar {
             get {
                 return ResourceManager.GetString("EnvVar", resourceCulture);
             }
@@ -72,7 +90,7 @@ namespace CompanyEmployees {
         /// <summary>
         ///   Looks up a localized string similar to CompanyEmployees.
         /// </summary>
-        internal static string EventViewerSource {
+        public static string EventViewerSource {
             get {
                 return ResourceManager.GetString("EventViewerSource", resourceCulture);
             }
@@ -81,7 +99,7 @@ namespace CompanyEmployees {
         /// <summary>
         ///   Looks up a localized string similar to appsettings.json.
         /// </summary>
-        internal static string MainAppSettings {
+        public static string MainAppSettings {
             get {
                 return ResourceManager.GetString("MainAppSettings", resourceCulture);
             }
@@ -90,7 +108,7 @@ namespace CompanyEmployees {
         /// <summary>
         ///   Looks up a localized string similar to nlog.config.
         /// </summary>
-        internal static string NLogConfig {
+        public static string NLogConfig {
             get {
                 return ResourceManager.GetString("NLogConfig", resourceCulture);
             }
@@ -99,7 +117,7 @@ namespace CompanyEmployees {
         /// <summary>
         ///   Looks up a localized string similar to sqlConnection.
         /// </summary>
-        internal static string SqlConn {
+        public static string SqlConn {
             get {
                 return ResourceManager.GetString("SqlConn", resourceCulture);
             }

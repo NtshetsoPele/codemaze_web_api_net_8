@@ -19,7 +19,7 @@ public static class PipelineConfiguration
         {
             ForwardedHeaders = ForwardedHeaders.All
         });
-        app.UseCors(policyName: "CorsPolicy");
+        app.UseCors(policyName: Resources.CorsPolicy);
 
         app.UseAuthorization();
 

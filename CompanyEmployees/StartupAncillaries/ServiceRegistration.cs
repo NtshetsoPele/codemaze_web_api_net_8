@@ -1,19 +1,19 @@
-﻿namespace CompanyEmployees.StartupAncillaries;
+﻿using WebAppBuilder = Microsoft.AspNetCore.Builder.WebApplicationBuilder;
+
+namespace CompanyEmployees.StartupAncillaries;
 
 public static class ServiceRegistration
 {
-    public static WebApplicationBuilder RegisterServices(this WebApplicationBuilder builder)
+    public static WebAppBuilder RegisterServices(this WebAppBuilder builder)
     {
         AddCustomServices(builder);
-
         AddStandardServices(builder);
-
         AddLoggingServices(builder);
 
         return builder;
     }
 
-    private static void AddCustomServices(WebApplicationBuilder builder)
+    private static void AddCustomServices(WebAppBuilder builder)
     {
         builder.Services
             .ConfigureCors()
@@ -24,12 +24,12 @@ public static class ServiceRegistration
             .ConfigureSqlContext(builder.Configuration);
     }
 
-    private static void AddStandardServices(WebApplicationBuilder builder)
+    private static void AddStandardServices(WebAppBuilder builder)
     {
         builder.Services.AddControllers();
     }
 
-    private static void AddLoggingServices(WebApplicationBuilder builder)
+    private static void AddLoggingServices(WebAppBuilder builder)
     {
         builder.Host.UseNLog();
     }

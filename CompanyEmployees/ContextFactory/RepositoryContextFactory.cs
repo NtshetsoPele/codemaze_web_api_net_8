@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using ContextBuilder = Microsoft.EntityFrameworkCore.DbContextOptionsBuilder<Repository.RepositoryContext>;
+﻿using ContextBuilder = Microsoft.EntityFrameworkCore.DbContextOptionsBuilder<Repository.RepositoryContext>;
 using IConfigRoot = Microsoft.Extensions.Configuration.IConfigurationRoot;
 using IConfigBuilder = Microsoft.Extensions.Configuration.IConfigurationBuilder;
 
@@ -18,16 +17,16 @@ public class RepositoryContextFactory : IDesignTimeDbContextFactory<RepositoryCo
 
     private static IConfigRoot GetConfig()
     {
-        IConfigBuilder configBuilder = GetBaseConfigBuilder();
+        IConfigBuilder builder = GetBaseConfigBuilder();
 
         string envSettings = TryToGetEnvSettings();
 
         if (ThereIsEnvSettings(envSettings))
         {
-            LoadEnvSettings(configBuilder, envSettings);
+            LoadEnvSettings(builder, envSettings);
         }
 
-        return configBuilder.Build();
+        return builder.Build();
     }
 
     private static IConfigBuilder GetBaseConfigBuilder() =>
@@ -42,8 +41,8 @@ public class RepositoryContextFactory : IDesignTimeDbContextFactory<RepositoryCo
     private static bool ThereIsEnvSettings(string envSettings) =>
         File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, envSettings));
 
-    private static void LoadEnvSettings(IConfigBuilder configBuilder, string envSettings) =>
-        configBuilder.AddJsonFile(envSettings, optional: true, reloadOnChange: true);
+    private static void LoadEnvSettings(IConfigBuilder builder, string settings) =>
+        builder.AddJsonFile(settings, optional: true, reloadOnChange: true);
 
     private static ContextBuilder GetDbContextBuilder(IConfigRoot config)
     {
