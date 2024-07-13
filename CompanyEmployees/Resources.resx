@@ -118,10 +118,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppShutdownMessage" xml:space="preserve">
-    <value />
+    <value>App shutting down.</value>
+    <comment>Message logged at shutdown</comment>
   </data>
   <data name="AppStartupMessage" xml:space="preserve">
-    <value />
+    <value>App starting up.</value>
+    <comment>Message logged at start-up</comment>
   </data>
   <data name="CorsPolicy" xml:space="preserve">
     <value>CorsPolicy</value>

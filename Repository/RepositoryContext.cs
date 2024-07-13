@@ -2,10 +2,11 @@
 
 public class RepositoryContext(DbContextOptions options) : DbContext(options)
 {
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    protected override void OnModelCreating(ModelBuilder builder)
     {
-        modelBuilder.ApplyConfiguration(new CompanyConfiguration()); 
-        modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
+        builder
+            .ApplyConfiguration(new CompanyConfiguration())
+            .ApplyConfiguration(new EmployeeConfiguration());
     }
     
     public DbSet<Company> Companies { get; init; }

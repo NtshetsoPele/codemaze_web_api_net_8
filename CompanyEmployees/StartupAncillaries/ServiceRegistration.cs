@@ -21,12 +21,15 @@ public static class ServiceRegistration
             .ConfigureLoggerService()
             .ConfigureRepositoryManager()
             .ConfigureServiceManager()
-            .ConfigureSqlContext(builder.Configuration);
+            .ConfigureSqlContext(builder.Configuration)
+            .AddAutoMapper(typeof(MapperAssemblyReference).Assembly);
     }
 
     private static void AddStandardServices(WebAppBuilder builder)
     {
-        builder.Services.AddControllers();
+        builder.Services
+            .AddControllers()
+            .AddApplicationPart(typeof(PresentationAssemblyReference).Assembly);
     }
 
     private static void AddLoggingServices(WebAppBuilder builder)

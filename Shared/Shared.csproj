@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Entities\Entities.csproj" />
+    <Folder Include="DTOs\Requests\" />
   </ItemGroup>
 
 </Project>

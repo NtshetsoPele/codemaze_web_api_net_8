@@ -1,7 +1,11 @@
 ﻿namespace Service;
 
-internal sealed class CompanyService(IRepositoryManager repository, ILoggerManager logger) : ICompanyService
+internal sealed class CompanyService(
+    IRepositoryManager repository, ILoggerManager logger, IMapper mapper) : ICompanyService
 {
-    private readonly IRepositoryManager _repository = repository; 
-    private readonly ILoggerManager _logger = logger;
+    public IEnumerable<ToClientCompany> GetAllCompanies(bool trackChanges)
+    {
+        IEnumerable<Company> domainCompanies = repository.Company.GetAllCompanies(trackChanges);
+        return mapper.Map<IEnumerable<ToClientCompany>>(domainCompanies);
+    }
 }

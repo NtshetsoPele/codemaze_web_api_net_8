@@ -1,7 +1,4 @@
-﻿using Contracts;
-using NLog;
-
-namespace LoggerService;
+﻿namespace LoggerService;
 
 public sealed class LoggerManager : ILoggerManager
 {

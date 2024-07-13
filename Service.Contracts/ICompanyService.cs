@@ -2,4 +2,5 @@
 
 public interface ICompanyService
 {
+    IEnumerable<ToClientCompany> GetAllCompanies(bool trackChanges);
 }

@@ -1,1 +1,1 @@
-﻿
+﻿global using Shared.DTOs.Responses;
