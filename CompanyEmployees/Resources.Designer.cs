@@ -29,7 +29,7 @@ namespace CompanyEmployees {
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resources() {
+        public Resources() {
         }
         
         /// <summary>
@@ -66,6 +66,15 @@ namespace CompanyEmployees {
         public static string AppShutdownMessage {
             get {
                 return ResourceManager.GetString("AppShutdownMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string AppStartupMessage {
+            get {
+                return ResourceManager.GetString("AppStartupMessage", resourceCulture);
             }
         }
         

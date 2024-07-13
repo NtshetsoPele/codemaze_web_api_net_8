@@ -15,3 +15,4 @@ global using CompanyEmployees.StartupAncillaries;
 global using NLog.Web;
 global using System.Diagnostics;
 global using System.Reflection;
+global using CompanyEmployees;

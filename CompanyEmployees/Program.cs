@@ -5,7 +5,7 @@ try
     
     LogManager
         .GetCurrentClassLogger()
-        .Info(""/*Resources.AppStartupMessage*/);
+        .Info(Resources.AppStartupMessage);
 }
 catch (Exception logSetupFailureEx)
 {
@@ -35,7 +35,7 @@ finally
 {
     LogManager
         .GetCurrentClassLogger()
-        .Info(""/*Resources.AppShutdownMessage*/);
+        .Info(Resources.AppShutdownMessage);
 
     LogManager.Shutdown();
 }
