@@ -11,4 +11,17 @@ public class CompaniesController(IServiceManager service) : ControllerBase
 
         return Ok(companies);
     }
+
+    [HttpGet(template: "{companyId:guid}")]
+    public IActionResult GetCompanyById(Guid companyId)
+    {
+        ToClientCompany company = service.CompanyService.GetCompanyById(companyId, trackChanges: false);
+
+        if (company == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(company);
+    }
 }

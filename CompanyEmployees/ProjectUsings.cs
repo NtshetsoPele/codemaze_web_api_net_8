@@ -20,3 +20,4 @@ global using Mapping;
 global using Microsoft.AspNetCore.Diagnostics;
 global using Entities.ErrorModel;
 global using CompanyEmployees.ExceptionHandler;
+global using Entities.Exceptions;
