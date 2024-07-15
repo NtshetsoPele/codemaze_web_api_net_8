@@ -3,11 +3,11 @@
 public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(
-        HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
+        HttpContext context, Exception exception, CancellationToken token)
     {
-        SetResponseContentType(httpContext);
-        SetResponseStatusCode(httpContext, exception);
-        await WriteErrorResponseAsync(httpContext, exception, cancellationToken);
+        SetResponseContentType(context);
+        SetResponseStatusCode(context, exception);
+        await WriteErrorResponseAsync(context, exception, token);
         
         logger.LogCritical("Failure occured: {stackTrace}", exception.ToString());
 
