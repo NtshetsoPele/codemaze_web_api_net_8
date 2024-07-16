@@ -29,7 +29,8 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
     private static async Task WriteErrorResponseAsync(
         HttpContext context, Exception exception, CancellationToken token)
     {
-        await context.Response.WriteAsJsonAsync(CreateErrorDetails(exception.Message), token);
+        var error = CreateErrorDetails(exception.Message);
+        await context.Response.WriteAsJsonAsync(error, token);
     }
 
     private static ErrorDetails CreateErrorDetails(string error)

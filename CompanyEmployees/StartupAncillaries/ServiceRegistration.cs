@@ -1,4 +1,6 @@
-﻿using WebAppBuilder = Microsoft.AspNetCore.Builder.WebApplicationBuilder;
+﻿using CompanyEmployees.Formatters;
+using Microsoft.AspNetCore.Mvc;
+using WebAppBuilder = Microsoft.AspNetCore.Builder.WebApplicationBuilder;
 
 namespace CompanyEmployees.StartupAncillaries;
 
@@ -29,7 +31,13 @@ public static class ServiceRegistration
     private static void AddStandardServices(WebAppBuilder builder)
     {
         builder.Services
-            .AddControllers()
+            .AddControllers(configure: (MvcOptions opts) =>
+            {
+                opts.RespectBrowserAcceptHeader = true;
+                opts.ReturnHttpNotAcceptable = true;
+                opts.OutputFormatters.Add(new CsvOutputFormatter());
+            })
+            .AddXmlDataContractSerializerFormatters()
             .AddApplicationPart(typeof(PresentationAssemblyReference).Assembly);
     }
 

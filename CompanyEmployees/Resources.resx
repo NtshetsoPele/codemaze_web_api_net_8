@@ -129,6 +129,9 @@
     <value>CorsPolicy</value>
     <comment>CORS policy name</comment>
   </data>
+  <data name="CsvFormat" xml:space="preserve">
+    <value>text/csv</value>
+  </data>
   <data name="EnvVar" xml:space="preserve">
     <value>ASPNETCORE_ENVIRONMENT</value>
     <comment>Indicates the running environment </comment>

@@ -21,3 +21,7 @@ global using Microsoft.AspNetCore.Diagnostics;
 global using Entities.ErrorModel;
 global using CompanyEmployees.ExceptionHandler;
 global using Entities.Exceptions;
+global using System.Text;
+global using Microsoft.AspNetCore.Mvc.Formatters;
+global using Microsoft.Net.Http.Headers;
+global using Shared.DTOs.Responses;

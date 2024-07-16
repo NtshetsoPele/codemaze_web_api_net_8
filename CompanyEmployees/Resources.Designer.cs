@@ -88,6 +88,15 @@ namespace CompanyEmployees {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to text/csv.
+        /// </summary>
+        public static string CsvFormat {
+            get {
+                return ResourceManager.GetString("CsvFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ASPNETCORE_ENVIRONMENT.
         /// </summary>
         public static string EnvVar {
