@@ -40,13 +40,18 @@ public class EmployeesController(IServiceManager service) : ControllerBase
 
     [HttpPost]
     public IActionResult CreateEmployee(
-        [FromRoute] Guid companyId, [FromBody] EmployeeCreationRequest newEmployee)
+        [FromRoute] Guid companyId, [FromBody] EmployeeCreationRequest? newEmployee)
     {
+        if (newEmployee is null)
+        {
+            return BadRequest($"{nameof(newEmployee)} object is null");
+        }
+
         var clientEmployee = CreateNewEmployee();
         
         return CreatedAtRoute(
             EmployeeById, 
-            routeValues: new { companyId, clientEmployee.EmployeeId }, 
+            new { companyId, clientEmployee.EmployeeId }, 
             clientEmployee);
 
         #region Nested_Helpers
@@ -55,5 +60,13 @@ public class EmployeesController(IServiceManager service) : ControllerBase
             _empService.CreateCompanyEmployee(companyId, newEmployee, trackChanges: false);
 
         #endregion
+    }
+
+    [HttpDelete(template: "{employeeId:guid}")]
+    public IActionResult DeleteCompanyEmployee(Guid companyId, Guid employeeId)
+    {
+        _empService.DeleteCompanyEmployee(companyId, employeeId, trackChanges: false);
+        
+        return NoContent();
     }
 }

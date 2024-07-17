@@ -20,10 +20,6 @@ internal sealed class EmployeeService(
         #endregion
     }
 
-    private Company TryToGetCompany(Guid companyId, bool trackChanges) =>
-        _companies.GetCompany(companyId, trackChanges) ?? 
-        throw new CompanyNotFoundException(companyId);
-
     public ToClientEmployee GetCompanyEmployee(Guid companyId, Guid employeeId, bool trackChanges)
     {
         _ = TryToGetCompany(companyId, trackChanges);
@@ -54,4 +50,21 @@ internal sealed class EmployeeService(
         repository.Save();
         return mapper.Map<ToClientEmployee>(domainEmployee);
     }
+
+    public void DeleteCompanyEmployee(Guid companyId, Guid employeeId, bool trackChanges)
+    {
+        _ = TryToGetCompany(companyId, trackChanges);
+        var employee = TryToGetEmployee(companyId, employeeId, trackChanges);
+        
+        _employees.DeleteCompanyEmployee(employee);
+        repository.Save();
+    }
+
+    private Company TryToGetCompany(Guid companyId, bool trackChanges) =>
+        _companies.GetCompany(companyId, trackChanges) ??
+        throw new CompanyNotFoundException(companyId);
+    
+    private Employee TryToGetEmployee(Guid companyId, Guid employeeId, bool trackChanges) =>
+        _employees.GetCompanyEmployee(companyId, employeeId, trackChanges) ??
+        throw new EmployeeNotFoundException(employeeId);
 }
