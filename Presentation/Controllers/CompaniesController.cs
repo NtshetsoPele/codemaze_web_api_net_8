@@ -4,24 +4,40 @@
 [Route(template: "api/[controller]")]
 public class CompaniesController(IServiceManager service) : ControllerBase
 {
+    private const string CompanyById = "CompanyById";
+    private readonly ICompanyService _cmpService = service.CompanyService;
+
     [HttpGet]
     public IActionResult GetAllCompanies()
     {
-        IEnumerable<ToClientCompany> companies = service.CompanyService.GetAllCompanies(trackChanges: false);
+        return Ok(GetCompanies());
 
-        return Ok(companies);
+        #region Nested_Helpers
+        
+        ClientCompanies GetCompanies() =>
+            _cmpService.GetAllCompanies(trackChanges: false);
+
+        #endregion
     }
 
-    [HttpGet(template: "{companyId:guid}")]
-    public IActionResult GetCompanyById(Guid companyId)
+    [HttpGet(template: "{companyId:guid}", Name = CompanyById)]
+    public IActionResult GetCompanyById([FromRoute] Guid companyId)
     {
-        ToClientCompany company = service.CompanyService.GetCompanyById(companyId, trackChanges: false);
+        return Ok(GetCompany());
 
-        if (company == null)
-        {
-            return NotFound();
-        }
+        #region Nested_Helpers
+        
+        ToClientCompany GetCompany() =>
+            _cmpService.GetCompanyById(companyId, trackChanges: false);
+        
+        #endregion
+    }
 
-        return Ok(company);
+    [HttpPost]
+    public IActionResult CreateCompany([FromBody] CompanyCreationRequest company)
+    {
+        var newCompany = _cmpService.CreateCompany(company);
+        
+        return CreatedAtRoute(CompanyById, routeValues: new { newCompany.CompanyId }, newCompany);
     }
 }

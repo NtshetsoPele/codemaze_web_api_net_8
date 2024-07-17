@@ -15,4 +15,10 @@ public class EmployeeRepository(RepositoryContext context) : RepositoryBase<Empl
                 trackChanges)
             .SingleOrDefault();
     }
+
+    public void CreateCompanyEmployee(Guid companyId, Employee employee)
+    {
+        employee.CompanyId = companyId;
+        Create(employee);
+    }
 }

@@ -5,7 +5,7 @@ public class CompanyRepository(RepositoryContext context) :
 {
     public IEnumerable<Company> GetAllCompanies(bool trackChanges)
     {
-        return FindAll(trackChanges).OrderBy((Company c) => c.Name).ToList();
+        return [.. FindAll(trackChanges).OrderBy((Company c) => c.Name)];
     }
 
     public Company? GetCompany(Guid companyId, bool trackChanges)
@@ -15,4 +15,6 @@ public class CompanyRepository(RepositoryContext context) :
                 trackChanges)
             .SingleOrDefault();
     }
+
+    public void CreateCompany(Company company) => Create(company);
 }

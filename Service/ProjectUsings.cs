@@ -1,6 +1,10 @@
-﻿global using Contracts;
+﻿global using ClientCompanies = System.Collections.Generic.IEnumerable<Shared.DTOs.Responses.ToClientCompany>;
+global using Employees = System.Collections.Generic.IEnumerable<Entities.Models.Employee>;
+global using ToClientEmployees = System.Collections.Generic.IEnumerable<Shared.DTOs.Responses.ToClientEmployee>;
+global using Contracts;
 global using Service.Contracts;
 global using Entities.Models;
 global using Shared.DTOs.Responses;
 global using AutoMapper;
 global using Entities.Exceptions;
+global using Shared.DTOs.Requests;

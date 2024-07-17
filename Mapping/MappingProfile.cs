@@ -10,5 +10,9 @@ public class MappingProfile : Profile
                     opts.MapFrom((Company c) => string.Join(", ", c.Address, c.Country)));
         
         CreateMap<Employee, ToClientEmployee>();
+        
+        CreateMap<Company, CompanyCreationRequest>().ReverseMap();
+        
+        CreateMap<Employee, EmployeeCreationRequest>().ReverseMap();
     }
 }

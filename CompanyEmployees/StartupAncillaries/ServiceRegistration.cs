@@ -31,6 +31,10 @@ public static class ServiceRegistration
     private static void AddStandardServices(WebAppBuilder builder)
     {
         builder.Services
+            .Configure((ApiBehaviorOptions options) =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            })
             .AddControllers(configure: (MvcOptions opts) =>
             {
                 opts.RespectBrowserAcceptHeader = true;

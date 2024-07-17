@@ -3,18 +3,31 @@
 internal sealed class CompanyService(
     IRepositoryManager repository, ILoggerManager logger, IMapper mapper) : ICompanyService
 {
-    public IEnumerable<ToClientCompany> GetAllCompanies(bool trackChanges)
+    public ClientCompanies GetAllCompanies(bool trackChanges)
     {
-        IEnumerable<Company> domainCompanies = repository.Company.GetAllCompanies(trackChanges);
-        return mapper.Map<IEnumerable<ToClientCompany>>(domainCompanies);
+        return mapper.Map<ClientCompanies>(GetCompanies());
+
+        IEnumerable<Company> GetCompanies() => 
+            repository.Company.GetAllCompanies(trackChanges);
     }
 
     public ToClientCompany GetCompanyById(Guid companyId, bool trackChanges)
     {
-        Company? domainCompany = repository.Company.GetCompany(companyId, trackChanges);
+        var domainCompany = GetCompany();
 
-        return domainCompany is not null
-            ? mapper.Map<ToClientCompany>(domainCompany)
-            : throw new CompanyNotFoundException(companyId);
+        return domainCompany is null
+            ? throw new CompanyNotFoundException(companyId)
+            : mapper.Map<ToClientCompany>(domainCompany);
+        
+        Company? GetCompany() =>
+            repository.Company.GetCompany(companyId, trackChanges);
+    }
+
+    public ToClientCompany CreateCompany(CompanyCreationRequest company)
+    {
+        Company domainCompany = mapper.Map<Company>(company);
+        repository.Company.CreateCompany(domainCompany);
+        repository.Save();
+        return mapper.Map<ToClientCompany>(domainCompany);
     }
 }
