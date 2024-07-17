@@ -105,11 +105,10 @@ internal sealed class CompanyService(
     /// <exception cref="CompanyNotFoundException">Condition.</exception>
     public void DeleteCompanyById(Guid companyId, bool trackChanges)
     {
-        var domainCompany = repository.Company.GetCompany(companyId, trackChanges);
-        if (domainCompany is null)
-        {
+        var domainCompany = 
+            repository.Company.GetCompany(companyId, trackChanges) ?? 
             throw new CompanyNotFoundException(companyId);
-        }
+        
         repository.Company.DeleteCompany(domainCompany);
         repository.Save();
     }
