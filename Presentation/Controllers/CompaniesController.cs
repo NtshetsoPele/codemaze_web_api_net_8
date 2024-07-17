@@ -4,8 +4,12 @@
 [Route(template: "api/[controller]")]
 public class CompaniesController(IServiceManager service) : ControllerBase
 {
+    #region State
+
     private const string CompanyById = "CompanyById";
     private readonly ICompanyService _cmpService = service.CompanyService;
+
+    #endregion
 
     [HttpGet]
     public IActionResult GetAllCompanies()

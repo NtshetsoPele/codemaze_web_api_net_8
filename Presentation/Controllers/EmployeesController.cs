@@ -4,8 +4,12 @@
 [Route(template: "api/companies/{companyId:guid}/[controller]")]
 public class EmployeesController(IServiceManager service) : ControllerBase
 {
-    private readonly IEmployeeService _empService = service.EmployeeService;
+    #region State
+
     private const string EmployeeById = "EmployeeById";
+    private readonly IEmployeeService _empService = service.EmployeeService;
+
+    #endregion
 
     [HttpGet]
     public IActionResult GetCompanyEmployees([FromRoute] Guid companyId)
@@ -38,19 +42,11 @@ public class EmployeesController(IServiceManager service) : ControllerBase
     public IActionResult CreateEmployee(
         [FromRoute] Guid companyId, [FromBody] EmployeeCreationRequest newEmployee)
     {
-        //var clientEmployee = CreateNewEmployee();
-
-        var clientEmployee = new ToClientEmployee
-        {
-            EmployeeId = Guid.NewGuid(),
-            Name = newEmployee.Name, 
-            Age = newEmployee.Age, 
-            Position = newEmployee.Position
-        };
+        var clientEmployee = CreateNewEmployee();
         
-        return CreatedAtAction(
+        return CreatedAtRoute(
             EmployeeById, 
-            routeValues: new { companyId, employeeId = clientEmployee.EmployeeId }, 
+            routeValues: new { companyId, clientEmployee.EmployeeId }, 
             clientEmployee);
 
         #region Nested_Helpers
