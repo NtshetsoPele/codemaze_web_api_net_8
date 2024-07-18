@@ -7,3 +7,5 @@ global using Shared.DTOs.Requests;
 global using Microsoft.AspNetCore.Mvc.ModelBinding;
 global using System.ComponentModel;
 global using System.Reflection;
+global using Presentation.ModelBinders;
+global using Shared.DTOs;

@@ -60,6 +60,14 @@ internal sealed class EmployeeService(
         repository.Save();
     }
 
+    public void UpdateCompanyEmployee(CompanyEmployeeUpdateParameters empUpdate)
+    {
+        _ = TryToGetCompany(empUpdate.CmpId, empUpdate.CmpTrackChanges);
+        var employee = TryToGetEmployee(empUpdate.CmpId, empUpdate.EmpId, empUpdate.EmpTrackChanges);
+        mapper.Map(empUpdate.EmpUpdate, employee);
+        repository.Save();
+    }
+
     private Company TryToGetCompany(Guid companyId, bool trackChanges) =>
         _companies.GetCompany(companyId, trackChanges) ??
         throw new CompanyNotFoundException(companyId);

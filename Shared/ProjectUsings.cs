@@ -1,7 +1,2 @@
-﻿namespace Shared
-{
-    public class ProjectUsings
-    {
-
-    }
-}
+﻿global using Shared.DTOs.Requests;
+global using EmpUpdates = System.Collections.Generic.IEnumerable<Shared.DTOs.Requests.EmployeeCreationRequest>;

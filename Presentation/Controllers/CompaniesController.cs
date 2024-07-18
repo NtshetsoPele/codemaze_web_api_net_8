@@ -1,6 +1,4 @@
-﻿using Presentation.ModelBinders;
-
-namespace Presentation.Controllers;
+﻿namespace Presentation.Controllers;
 
 [ApiController]
 [Route(template: "api/[controller]")]
@@ -83,11 +81,24 @@ public class CompaniesController(IServiceManager service) : ControllerBase
         #endregion
     }
 
-    [HttpDelete]
+    [HttpDelete(template: "{companyId:guid}")]
     public IActionResult DeleteCompany(Guid companyId)
     {
         _cmpService.DeleteCompanyById(companyId, trackChanges: false);
         
+        return NoContent();
+    }
+
+    [HttpPut(template: "{companyId:guid}")]
+    public IActionResult UpdateCompany(Guid companyId, [FromBody] CompanyUpdateRequest? companyUpdate)
+    {
+        if (companyUpdate is null)
+        {
+            return BadRequest($"{nameof(companyUpdate)} object is null");
+        }
+        
+        _cmpService.UpdateCompany(companyId, companyUpdate, trackChanges: true);
+
         return NoContent();
     }
 }

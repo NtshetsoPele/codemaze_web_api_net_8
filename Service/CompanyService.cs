@@ -112,4 +112,15 @@ internal sealed class CompanyService(
         repository.Company.DeleteCompany(domainCompany);
         repository.Save();
     }
+
+    /// <exception cref="CompanyNotFoundException">Condition.</exception>
+    public void UpdateCompany(Guid companyId, CompanyUpdateRequest companyUpdate, bool trackChanges)
+    {
+        var domainCompany = 
+            repository.Company.GetCompany(companyId, trackChanges) ??
+            throw new CompanyNotFoundException(companyId);
+
+        mapper.Map(companyUpdate, domainCompany);
+        repository.Save();
+    }
 }

@@ -11,3 +11,5 @@ global using Shared.DTOs.Responses;
 global using AutoMapper;
 global using Entities.Exceptions;
 global using Shared.DTOs.Requests;
+global using Shared.ParameterObjects;
+global using Shared.DTOs;

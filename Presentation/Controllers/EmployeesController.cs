@@ -1,4 +1,6 @@
-﻿namespace Presentation.Controllers;
+﻿using Shared.ParameterObjects;
+
+namespace Presentation.Controllers;
 
 [ApiController]
 [Route(template: "api/companies/{companyId:guid}/[controller]")]
@@ -67,6 +69,27 @@ public class EmployeesController(IServiceManager service) : ControllerBase
     {
         _empService.DeleteCompanyEmployee(companyId, employeeId, trackChanges: false);
         
+        return NoContent();
+    }
+
+    [HttpPut(template: "{employeeId:guid}")]
+    public IActionResult UpdateCompanyEmployee(
+        Guid companyId, Guid employeeId, [FromBody] EmployeeUpdateRequest? empUpdate)
+    {
+        if (empUpdate is null)
+        {
+            return BadRequest($"{nameof(empUpdate)} object is null");
+        }
+        
+        _empService.UpdateCompanyEmployee(new CompanyEmployeeUpdateParameters
+        {
+            CmpId = companyId,
+            EmpId = employeeId,
+            EmpUpdate = empUpdate,
+            CmpTrackChanges = false,
+            EmpTrackChanges = true
+        });
+
         return NoContent();
     }
 }

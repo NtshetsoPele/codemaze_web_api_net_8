@@ -4,3 +4,5 @@ global using NewCompanies = System.Collections.Generic.IEnumerable<Shared.DTOs.R
 global using ClientEmployees = System.Collections.Generic.IEnumerable<Shared.DTOs.Responses.ToClientEmployee>;
 global using CompanyIds = System.Collections.Generic.IEnumerable<System.Guid>;
 global using ClientCompanies = System.Collections.Generic.IEnumerable<Shared.DTOs.Responses.ToClientCompany>;
+global using Shared.ParameterObjects;
+global using Shared.DTOs;
