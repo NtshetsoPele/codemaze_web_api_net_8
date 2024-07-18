@@ -55,7 +55,7 @@ public class CompaniesController(IServiceManager service) : ControllerBase
     public IActionResult GetCompanyCollection(
         [ModelBinder(binderType: typeof(ArrayModelBinder))] IEnumerable<Guid> companyIds)
     {
-        return Ok(value: GetCompanies());
+        return Ok(GetCompanies());
 
         #region Nested_Helpers
 

@@ -3,14 +3,15 @@
 internal sealed class CompanyService(
     IRepositoryManager repository, ILoggerManager logger, IMapper mapper) : ICompanyService
 {
+    private readonly ICompanyRepository _companies = repository.Company;
+    
     public ClientCompanies GetAllCompanies(bool trackChanges)
     {
         return mapper.Map<ClientCompanies>(GetCompanies());
 
         #region Nested_Helpers
 
-        Companies GetCompanies() => 
-            repository.Company.GetAllCompanies(trackChanges);
+        Companies GetCompanies() => _companies.GetAllCompanies(trackChanges);
 
         #endregion
     }
@@ -24,8 +25,7 @@ internal sealed class CompanyService(
 
         #region Nested_Helpers
 
-        Company? GetCompany() =>
-            repository.Company.GetCompany(id, trackChanges);
+        Company? GetCompany() => _companies.GetCompany(id, trackChanges);
 
         ToClientCompany ReturnCompanyIfFound() =>
             domainCompany is null
@@ -38,7 +38,7 @@ internal sealed class CompanyService(
     public ToClientCompany CreateCompany(CompanyCreationRequest company)
     {
         Company domainCompany = mapper.Map<Company>(company);
-        repository.Company.CreateCompany(domainCompany);
+        _companies.CreateCompany(domainCompany);
         repository.Save();
         return mapper.Map<ToClientCompany>(domainCompany);
     }
@@ -67,7 +67,7 @@ internal sealed class CompanyService(
         }
         
         Companies GetCompanies() =>
-            repository.Company.GetCompaniesByTheirIds(companyIdsList, trackChanges);
+            _companies.GetCompaniesByTheirIds(companyIdsList, trackChanges);
 
         void ThrowIfCompanyCountsMismatch()
         {
@@ -92,7 +92,7 @@ internal sealed class CompanyService(
         Companies companies = mapper.Map<Companies>(newCompanies);
         foreach (var company in companies)
         {
-            repository.Company.CreateCompany(company);
+            _companies.CreateCompany(company);
         }
         repository.Save();
 
@@ -102,25 +102,21 @@ internal sealed class CompanyService(
         return (clientCompanies, companyIds);
     }
 
-    /// <exception cref="CompanyNotFoundException">Condition.</exception>
     public void DeleteCompanyById(Guid companyId, bool trackChanges)
     {
-        var domainCompany = 
-            repository.Company.GetCompany(companyId, trackChanges) ?? 
-            throw new CompanyNotFoundException(companyId);
-        
-        repository.Company.DeleteCompany(domainCompany);
+        var domainCompany = TryToGetCompany(companyId, trackChanges);
+        _companies.DeleteCompany(domainCompany);
         repository.Save();
     }
 
-    /// <exception cref="CompanyNotFoundException">Condition.</exception>
     public void UpdateCompany(Guid companyId, CompanyUpdateRequest companyUpdate, bool trackChanges)
     {
-        var domainCompany = 
-            repository.Company.GetCompany(companyId, trackChanges) ??
-            throw new CompanyNotFoundException(companyId);
-
+        var domainCompany = TryToGetCompany(companyId, trackChanges);
         mapper.Map(companyUpdate, domainCompany);
         repository.Save();
     }
+    
+    Company TryToGetCompany(Guid companyId, bool trackChanges) =>
+        _companies.GetCompany(companyId, trackChanges) ??
+        throw new CompanyNotFoundException(companyId);
 }
