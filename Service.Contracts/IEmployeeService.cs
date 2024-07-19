@@ -7,4 +7,6 @@ public interface IEmployeeService
     ToClientEmployee CreateCompanyEmployee(Guid companyId, EmployeeCreationRequest newEmployee, bool trackChanges);
     void DeleteCompanyEmployee(Guid companyId, Guid employeeId, bool trackChanges);
     void UpdateCompanyEmployee(CompanyEmployeeUpdateParameters empUpdate);
+    (EmployeeUpdateRequest updateEmp, Employee domainEmp) GetPatchEmployee(EmployeePatchParameters empPatch);
+    void ApplyPatch(EmployeeUpdateRequest updateEmp, Employee domainEmp);
 }

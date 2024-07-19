@@ -1,4 +1,5 @@
-﻿using Shared.ParameterObjects;
+﻿using Microsoft.AspNetCore.JsonPatch;
+using Shared.ParameterObjects;
 
 namespace Presentation.Controllers;
 
@@ -73,7 +74,7 @@ public class EmployeesController(IServiceManager service) : ControllerBase
     }
 
     [HttpPut(template: "{employeeId:guid}")]
-    public IActionResult UpdateCompanyEmployee(
+    public IActionResult FullyUpdateCompanyEmployee(
         Guid companyId, Guid employeeId, [FromBody] EmployeeUpdateRequest? empUpdate)
     {
         if (empUpdate is null)
@@ -89,6 +90,31 @@ public class EmployeesController(IServiceManager service) : ControllerBase
             CmpTrackChanges = false,
             EmpTrackChanges = true
         });
+
+        return NoContent();
+    }
+
+    [HttpPatch(template: "{employeeId:guid}")]
+    public IActionResult PartiallyUpdateCompanyEmployee(
+        Guid companyId, Guid employeeId, [FromBody] JsonPatchDocument<EmployeeUpdateRequest?>? patchDoc)
+    {
+        if (patchDoc is null)
+        {
+            return BadRequest("patchDoc is null.");
+        }
+        
+        var (updateEmp, domainEmp) = _empService.GetPatchEmployee(
+            new EmployeePatchParameters
+            {
+                CmpId = companyId,
+                EmpId = employeeId,
+                CmpTrackChanges = false,
+                EmpTrackChanges = true
+            });
+        
+        patchDoc.ApplyTo(updateEmp);
+        
+        _empService.ApplyPatch(updateEmp, domainEmp);
 
         return NoContent();
     }

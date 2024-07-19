@@ -15,7 +15,7 @@ public class MappingProfile : Profile
         
         CreateMap<Employee, EmployeeCreationRequest>().ReverseMap();
 
-        CreateMap<EmployeeUpdateRequest, Employee>();
+        CreateMap<EmployeeUpdateRequest, Employee>().ReverseMap();
         
         CreateMap<CompanyUpdateRequest, Company>();
     }

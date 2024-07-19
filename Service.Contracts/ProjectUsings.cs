@@ -6,3 +6,4 @@ global using CompanyIds = System.Collections.Generic.IEnumerable<System.Guid>;
 global using ClientCompanies = System.Collections.Generic.IEnumerable<Shared.DTOs.Responses.ToClientCompany>;
 global using Shared.ParameterObjects;
 global using Shared.DTOs;
+global using Entities.Models;

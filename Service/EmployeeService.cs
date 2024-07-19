@@ -68,6 +68,20 @@ internal sealed class EmployeeService(
         repository.Save();
     }
 
+    public (EmployeeUpdateRequest updateEmp, Employee domainEmp) GetPatchEmployee(EmployeePatchParameters empPatch)
+    {
+        _ = TryToGetCompany(empPatch.CmpId, empPatch.CmpTrackChanges);
+        Employee domainEmp = TryToGetEmployee(empPatch.CmpId, empPatch.EmpId, empPatch.EmpTrackChanges);
+        var updateEmp = mapper.Map<EmployeeUpdateRequest>(domainEmp);
+        return (updateEmp, domainEmp);
+    }
+
+    public void ApplyPatch(EmployeeUpdateRequest updateEmp, Employee domainEmp)
+    {
+        mapper.Map(updateEmp, domainEmp);
+        repository.Save();
+    }
+
     private Company TryToGetCompany(Guid companyId, bool trackChanges) =>
         _companies.GetCompany(companyId, trackChanges) ??
         throw new CompanyNotFoundException(companyId);
