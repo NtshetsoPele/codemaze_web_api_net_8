@@ -4,8 +4,13 @@
 [Route(template: "api/[controller]")]
 public class CompaniesController(IServiceManager service) : ControllerBase
 {
+    #region State
+
     private const string CompanyById = "CompanyById";
+    private const string CompanyCollection = "CompanyCollection";
     private readonly ICompanyService _cmpService = service.CompanyService;
+
+    #endregion
 
     [HttpGet]
     public IActionResult GetAllCompanies()
@@ -34,10 +39,66 @@ public class CompaniesController(IServiceManager service) : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult CreateCompany([FromBody] CompanyCreationRequest company)
+    public IActionResult CreateCompany([FromBody] CompanyCreationRequest? company)
     {
+        if (company is null)
+        {
+            return BadRequest($"{nameof(company)} object is null");
+        }
+
         var newCompany = _cmpService.CreateCompany(company);
         
-        return CreatedAtRoute(CompanyById, routeValues: new { newCompany.CompanyId }, newCompany);
+        return CreatedAtRoute(CompanyById, new { newCompany.CompanyId }, newCompany);
+    }
+
+    [HttpGet(template: "collection/({companyIds})", Name = CompanyCollection)]
+    public IActionResult GetCompanyCollection(
+        [ModelBinder(binderType: typeof(ArrayModelBinder))] IEnumerable<Guid> companyIds)
+    {
+        return Ok(GetCompanies());
+
+        #region Nested_Helpers
+
+        ClientCompanies GetCompanies() =>
+            _cmpService.GetCompaniesByIds(ids: companyIds, trackChanges: false);
+
+        #endregion
+    }
+
+    [HttpPost(template: "collection")]
+    public IActionResult CreateCompanyCollection(
+        [FromBody] IEnumerable<CompanyCreationRequest> newCompanies)
+    {
+        var (clientCompanies, ids) = CreateCompanies();
+
+        return CreatedAtRoute(CompanyCollection, new { companyIds = ids }, clientCompanies);
+
+        #region Nested_Helpers
+
+        (ClientCompanies clientCompanies, string ids) CreateCompanies() =>
+            _cmpService.CreateCompanyCollection(newCompanies);
+
+        #endregion
+    }
+
+    [HttpDelete(template: "{companyId:guid}")]
+    public IActionResult DeleteCompany(Guid companyId)
+    {
+        _cmpService.DeleteCompanyById(companyId, trackChanges: false);
+        
+        return NoContent();
+    }
+
+    [HttpPut(template: "{companyId:guid}")]
+    public IActionResult UpdateCompany(Guid companyId, [FromBody] CompanyUpdateRequest? companyUpdate)
+    {
+        if (companyUpdate is null)
+        {
+            return BadRequest($"{nameof(companyUpdate)} object is null");
+        }
+        
+        _cmpService.UpdateCompany(companyId, companyUpdate, trackChanges: true);
+
+        return NoContent();
     }
 }

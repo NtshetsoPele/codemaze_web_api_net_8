@@ -4,3 +4,8 @@ global using Microsoft.AspNetCore.Mvc;
 global using Service.Contracts;
 global using Shared.DTOs.Responses;
 global using Shared.DTOs.Requests;
+global using Microsoft.AspNetCore.Mvc.ModelBinding;
+global using System.ComponentModel;
+global using System.Reflection;
+global using Presentation.ModelBinders;
+global using Shared.DTOs;

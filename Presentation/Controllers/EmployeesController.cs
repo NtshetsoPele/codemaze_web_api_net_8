@@ -1,4 +1,7 @@
-﻿namespace Presentation.Controllers;
+﻿using Microsoft.AspNetCore.JsonPatch;
+using Shared.ParameterObjects;
+
+namespace Presentation.Controllers;
 
 [ApiController]
 [Route(template: "api/companies/{companyId:guid}/[controller]")]
@@ -6,8 +9,8 @@ public class EmployeesController(IServiceManager service) : ControllerBase
 {
     #region State
 
-    private readonly IEmployeeService _empService = service.EmployeeService;
     private const string EmployeeById = "EmployeeById";
+    private readonly IEmployeeService _empService = service.EmployeeService;
 
     #endregion
 
@@ -56,7 +59,7 @@ public class EmployeesController(IServiceManager service) : ControllerBase
         
         return CreatedAtRoute(
             EmployeeById, 
-            routeValues: new { companyId, employeeId = clientEmployee.EmployeeId }, 
+            new { companyId, clientEmployee.EmployeeId }, 
             clientEmployee);
 
         #region Nested_Helpers
@@ -65,5 +68,59 @@ public class EmployeesController(IServiceManager service) : ControllerBase
             _empService.CreateCompanyEmployee(companyId, newEmployee, trackChanges: false);
 
         #endregion
+    }
+
+    [HttpDelete(template: "{employeeId:guid}")]
+    public IActionResult DeleteCompanyEmployee(Guid companyId, Guid employeeId)
+    {
+        _empService.DeleteCompanyEmployee(companyId, employeeId, trackChanges: false);
+        
+        return NoContent();
+    }
+
+    [HttpPut(template: "{employeeId:guid}")]
+    public IActionResult FullyUpdateCompanyEmployee(
+        Guid companyId, Guid employeeId, [FromBody] EmployeeUpdateRequest? empUpdate)
+    {
+        if (empUpdate is null)
+        {
+            return BadRequest($"{nameof(empUpdate)} object is null");
+        }
+        
+        _empService.UpdateCompanyEmployee(new CompanyEmployeeUpdateParameters
+        {
+            CmpId = companyId,
+            EmpId = employeeId,
+            EmpUpdate = empUpdate,
+            CmpTrackChanges = false,
+            EmpTrackChanges = true
+        });
+
+        return NoContent();
+    }
+
+    [HttpPatch(template: "{employeeId:guid}")]
+    public IActionResult PartiallyUpdateCompanyEmployee(
+        Guid companyId, Guid employeeId, [FromBody] JsonPatchDocument<EmployeeUpdateRequest?>? patchDoc)
+    {
+        if (patchDoc is null)
+        {
+            return BadRequest("patchDoc is null.");
+        }
+        
+        var (updateEmp, domainEmp) = _empService.GetPatchEmployee(
+            new EmployeePatchParameters
+            {
+                CmpId = companyId,
+                EmpId = employeeId,
+                CmpTrackChanges = false,
+                EmpTrackChanges = true
+            });
+        
+        patchDoc.ApplyTo(updateEmp);
+        
+        _empService.ApplyPatch(updateEmp, domainEmp);
+
+        return NoContent();
     }
 }

@@ -24,7 +24,7 @@ namespace CompanyEmployees.Migrations
 
             modelBuilder.Entity("Entities.Models.Company", b =>
                 {
-                    b.Property<Guid>("CompanyId")
+                    b.Property<Guid>("CmpId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -42,7 +42,7 @@ namespace CompanyEmployees.Migrations
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
 
-                    b.HasKey("CompanyId");
+                    b.HasKey("CmpId");
 
                     b.ToTable("Companies", (string)null);
 
@@ -65,14 +65,14 @@ namespace CompanyEmployees.Migrations
 
             modelBuilder.Entity("Entities.Models.Employee", b =>
                 {
-                    b.Property<Guid>("EmployeeId")
+                    b.Property<Guid>("EmpId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("CompanyId")
+                    b.Property<Guid>("CmpId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
@@ -85,9 +85,9 @@ namespace CompanyEmployees.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.HasKey("EmployeeId");
+                    b.HasKey("EmpId");
 
-                    b.HasIndex("CompanyId");
+                    b.HasIndex("CmpId");
 
                     b.ToTable("Employees", (string)null);
 
@@ -122,7 +122,7 @@ namespace CompanyEmployees.Migrations
                 {
                     b.HasOne("Entities.Models.Company", "Company")
                         .WithMany("Employees")
-                        .HasForeignKey("CompanyId")
+                        .HasForeignKey("CmpId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

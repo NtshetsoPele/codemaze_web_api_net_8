@@ -20,10 +20,6 @@ internal sealed class EmployeeService(
         #endregion
     }
 
-    private Company TryToGetCompany(Guid companyId, bool trackChanges) =>
-        _companies.GetCompany(companyId, trackChanges) ?? 
-        throw new CompanyNotFoundException(companyId);
-
     public ToClientEmployee GetCompanyEmployee(Guid companyId, Guid employeeId, bool trackChanges)
     {
         _ = TryToGetCompany(companyId, trackChanges);
@@ -54,4 +50,43 @@ internal sealed class EmployeeService(
         repository.Save();
         return mapper.Map<ToClientEmployee>(domainEmployee);
     }
+
+    public void DeleteCompanyEmployee(Guid companyId, Guid employeeId, bool trackChanges)
+    {
+        _ = TryToGetCompany(companyId, trackChanges);
+        var employee = TryToGetEmployee(companyId, employeeId, trackChanges);
+        
+        _employees.DeleteCompanyEmployee(employee);
+        repository.Save();
+    }
+
+    public void UpdateCompanyEmployee(CompanyEmployeeUpdateParameters empUpdate)
+    {
+        _ = TryToGetCompany(empUpdate.CmpId, empUpdate.CmpTrackChanges);
+        var employee = TryToGetEmployee(empUpdate.CmpId, empUpdate.EmpId, empUpdate.EmpTrackChanges);
+        mapper.Map(empUpdate.EmpUpdate, employee);
+        repository.Save();
+    }
+
+    public (EmployeeUpdateRequest updateEmp, Employee domainEmp) GetPatchEmployee(EmployeePatchParameters empPatch)
+    {
+        _ = TryToGetCompany(empPatch.CmpId, empPatch.CmpTrackChanges);
+        Employee domainEmp = TryToGetEmployee(empPatch.CmpId, empPatch.EmpId, empPatch.EmpTrackChanges);
+        var updateEmp = mapper.Map<EmployeeUpdateRequest>(domainEmp);
+        return (updateEmp, domainEmp);
+    }
+
+    public void ApplyPatch(EmployeeUpdateRequest updateEmp, Employee domainEmp)
+    {
+        mapper.Map(updateEmp, domainEmp);
+        repository.Save();
+    }
+
+    private Company TryToGetCompany(Guid companyId, bool trackChanges) =>
+        _companies.GetCompany(companyId, trackChanges) ??
+        throw new CompanyNotFoundException(companyId);
+    
+    private Employee TryToGetEmployee(Guid companyId, Guid employeeId, bool trackChanges) =>
+        _employees.GetCompanyEmployee(companyId, employeeId, trackChanges) ??
+        throw new EmployeeNotFoundException(employeeId);
 }

@@ -42,14 +42,14 @@ namespace CompanyEmployees.Migrations
                         name: "FK_Employees_Companies_CompanyId",
                         column: x => x.CompanyId,
                         principalTable: "Companies",
-                        principalColumn: "CompanyId",
+                        principalColumn: "CmpId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Employees_CompanyId",
                 table: "Employees",
-                column: "CompanyId");
+                column: "CmpId");
         }
 
         /// <inheritdoc />

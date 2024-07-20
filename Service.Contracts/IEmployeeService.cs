@@ -2,7 +2,11 @@
 
 public interface IEmployeeService
 {
-    IEnumerable<ToClientEmployee> GetCompanyEmployees(Guid companyId, bool trackChanges);
+    ClientEmployees GetCompanyEmployees(Guid companyId, bool trackChanges);
     ToClientEmployee GetCompanyEmployee(Guid companyId, Guid employeeId, bool trackChanges);
     ToClientEmployee CreateCompanyEmployee(Guid companyId, EmployeeCreationRequest newEmployee, bool trackChanges);
+    void DeleteCompanyEmployee(Guid companyId, Guid employeeId, bool trackChanges);
+    void UpdateCompanyEmployee(CompanyEmployeeUpdateParameters empUpdate);
+    (EmployeeUpdateRequest updateEmp, Employee domainEmp) GetPatchEmployee(EmployeePatchParameters empPatch);
+    void ApplyPatch(EmployeeUpdateRequest updateEmp, Employee domainEmp);
 }

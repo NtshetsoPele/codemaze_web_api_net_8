@@ -17,4 +17,11 @@ public class CompanyRepository(RepositoryContext context) :
     }
 
     public void CreateCompany(Company company) => Create(company);
+
+    public IEnumerable<Company> GetCompaniesByTheirIds(IEnumerable<Guid> ids, bool trackChanges)
+    {
+        return [.. FindByCondition((Company c) => ids.Contains(c.CompanyId), trackChanges)];
+    }
+
+    public void DeleteCompany(Company company) => base.Delete(company);
 }

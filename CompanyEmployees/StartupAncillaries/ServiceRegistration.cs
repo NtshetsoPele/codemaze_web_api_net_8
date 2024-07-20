@@ -41,6 +41,7 @@ public static class ServiceRegistration
                 opts.ReturnHttpNotAcceptable = true;
                 opts.OutputFormatters.Add(new CsvOutputFormatter());
             })
+            .AddNewtonsoftJson()
             .AddXmlDataContractSerializerFormatters()
             .AddApplicationPart(typeof(PresentationAssemblyReference).Assembly);
     }
