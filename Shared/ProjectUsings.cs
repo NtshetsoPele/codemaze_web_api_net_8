@@ -1,7 +1,1 @@
-﻿namespace Shared
-{
-    public class ProjectUsings
-    {
-
-    }
-}
+﻿global using System.ComponentModel.DataAnnotations;

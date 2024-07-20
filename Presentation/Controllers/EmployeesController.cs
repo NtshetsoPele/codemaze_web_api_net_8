@@ -4,8 +4,12 @@
 [Route(template: "api/companies/{companyId:guid}/[controller]")]
 public class EmployeesController(IServiceManager service) : ControllerBase
 {
+    #region State
+
     private readonly IEmployeeService _empService = service.EmployeeService;
     private const string EmployeeById = "EmployeeById";
+
+    #endregion
 
     [HttpGet]
     public IActionResult GetCompanyEmployees([FromRoute] Guid companyId)
@@ -36,19 +40,21 @@ public class EmployeesController(IServiceManager service) : ControllerBase
 
     [HttpPost]
     public IActionResult CreateEmployee(
-        [FromRoute] Guid companyId, [FromBody] EmployeeCreationRequest newEmployee)
+        [FromRoute] Guid companyId, [FromBody] EmployeeCreationRequest? newEmployee)
     {
-        //var clientEmployee = CreateNewEmployee();
-
-        var clientEmployee = new ToClientEmployee
+        if (newEmployee is null)
         {
-            EmployeeId = Guid.NewGuid(),
-            Name = newEmployee.Name, 
-            Age = newEmployee.Age, 
-            Position = newEmployee.Position
-        };
+            return BadRequest("New employee details not found.");
+        }
+
+        if (!ModelState.IsValid)
+        {
+            return UnprocessableEntity(ModelState);
+        }
         
-        return CreatedAtAction(
+        var clientEmployee = CreateNewEmployee();
+        
+        return CreatedAtRoute(
             EmployeeById, 
             routeValues: new { companyId, employeeId = clientEmployee.EmployeeId }, 
             clientEmployee);
