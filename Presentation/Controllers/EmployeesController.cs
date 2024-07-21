@@ -114,7 +114,14 @@ public class EmployeesController(IServiceManager service) : ControllerBase
                 EmpTrackChanges = true
             });
         
-        patchDoc.ApplyTo(updateEmp);
+        patchDoc.ApplyTo(updateEmp, ModelState);
+
+        TryValidateModel(updateEmp);
+
+        if (!ModelState.IsValid)
+        {
+            return UnprocessableEntity("Patch request failed validation.");
+        }
         
         await _empService.ApplyPatchAsync(updateEmp, domainEmp);
 
