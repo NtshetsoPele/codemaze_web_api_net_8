@@ -102,7 +102,7 @@ public class EmployeesController(IServiceManager service) : ControllerBase
     {
         if (patchDoc is null)
         {
-            return BadRequest("patchDoc is null.");
+            return BadRequest("Patch request is empty.");
         }
         
         var (updateEmp, domainEmp) = await _empService.GetPatchEmployeeAsync(
@@ -120,7 +120,7 @@ public class EmployeesController(IServiceManager service) : ControllerBase
 
         if (!ModelState.IsValid)
         {
-            return UnprocessableEntity("Patch request failed validation.");
+            return UnprocessableEntity("Patch details failed validation.");
         }
         
         await _empService.ApplyPatchAsync(updateEmp, domainEmp);

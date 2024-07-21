@@ -11,3 +11,4 @@ global using Presentation.ModelBinders;
 global using Shared.DTOs;
 global using Microsoft.AspNetCore.JsonPatch;
 global using Shared.ParameterObjects;
+global using Microsoft.AspNetCore.Mvc.Filters;

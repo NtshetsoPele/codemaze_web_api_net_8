@@ -1,6 +1,4 @@
-﻿using CompanyEmployees.Formatters;
-using Microsoft.AspNetCore.Mvc;
-using WebAppBuilder = Microsoft.AspNetCore.Builder.WebApplicationBuilder;
+﻿using WebAppBuilder = Microsoft.AspNetCore.Builder.WebApplicationBuilder;
 
 namespace CompanyEmployees.StartupAncillaries;
 
@@ -25,7 +23,8 @@ public static class ServiceRegistration
             .ConfigureRepositoryManager()
             .ConfigureServiceManager()
             .ConfigureSqlContext(builder.Configuration)
-            .AddAutoMapper(typeof(MapperAssemblyReference).Assembly);
+            .AddAutoMapper(typeof(MapperAssemblyReference).Assembly)
+            .AddScoped<ValidationFilterAttribute>(); ;
     }
 
     private static void AddStandardServices(WebAppBuilder builder)

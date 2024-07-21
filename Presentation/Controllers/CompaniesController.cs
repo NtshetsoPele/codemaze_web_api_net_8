@@ -1,4 +1,6 @@
-﻿namespace Presentation.Controllers;
+﻿using Presentation.ActionFilters;
+
+namespace Presentation.Controllers;
 
 [ApiController]
 [Route(template: "api/[controller]")]
@@ -39,6 +41,7 @@ public class CompaniesController(IServiceManager service) : ControllerBase
     }
 
     [HttpPost]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> CreateCompany([FromBody] CompanyCreationRequest? company)
     {
         if (company is null)
@@ -90,6 +93,7 @@ public class CompaniesController(IServiceManager service) : ControllerBase
     }
 
     [HttpPut(template: "{companyId:guid}")]
+    [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> UpdateCompany(Guid companyId, [FromBody] CompanyUpdateRequest? companyUpdate)
     {
         if (companyUpdate is null)

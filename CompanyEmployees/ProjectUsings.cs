@@ -25,3 +25,6 @@ global using System.Text;
 global using Microsoft.AspNetCore.Mvc.Formatters;
 global using Microsoft.Net.Http.Headers;
 global using Shared.DTOs.Responses;
+global using CompanyEmployees.Formatters;
+global using Microsoft.AspNetCore.Mvc;
+global using Presentation.ActionFilters;
