@@ -2,11 +2,11 @@
 
 public interface IEmployeeService
 {
-    ClientEmployees GetCompanyEmployees(Guid companyId, bool trackChanges);
-    ToClientEmployee GetCompanyEmployee(Guid companyId, Guid employeeId, bool trackChanges);
-    ToClientEmployee CreateCompanyEmployee(Guid companyId, EmployeeCreationRequest newEmployee, bool trackChanges);
-    void DeleteCompanyEmployee(Guid companyId, Guid employeeId, bool trackChanges);
-    void UpdateCompanyEmployee(CompanyEmployeeUpdateParameters empUpdate);
-    (EmployeeUpdateRequest updateEmp, Employee domainEmp) GetPatchEmployee(EmployeePatchParameters empPatch);
-    void ApplyPatch(EmployeeUpdateRequest updateEmp, Employee domainEmp);
+    Task<ClientEmployees> GetCompanyEmployeesAsync(Guid companyId, bool trackChanges);
+    Task<ToClientEmployee> GetCompanyEmployeeAsync(Guid companyId, Guid employeeId, bool trackChanges);
+    Task<ToClientEmployee> CreateCompanyEmployeeAsync(Guid companyId, EmployeeCreationRequest newEmployee, bool trackChanges);
+    Task DeleteCompanyEmployeeAsync(Guid companyId, Guid employeeId, bool trackChanges);
+    Task UpdateCompanyEmployeeAsync(CompanyEmployeeUpdateParameters empUpdate);
+    Task<(EmployeeUpdateRequest updateEmp, Employee domainEmp)> GetPatchEmployeeAsync(EmployeePatchParameters empPatch);
+    Task ApplyPatchAsync(EmployeeUpdateRequest updateEmp, Employee domainEmp);
 }

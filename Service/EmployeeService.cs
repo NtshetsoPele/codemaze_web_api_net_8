@@ -6,32 +6,32 @@ internal sealed class EmployeeService(
     private readonly ICompanyRepository _companies = repository.Company;
     private readonly IEmployeeRepository _employees = repository.Employee;
     
-    public ToClientEmployees GetCompanyEmployees(Guid companyId, bool trackChanges)
+    public async Task<ToClientEmployees> GetCompanyEmployeesAsync(Guid companyId, bool trackChanges)
     {
-        _ = TryToGetCompany(companyId, trackChanges);
+        _ = await TryToGetCompanyAsync(companyId, trackChanges);
 
-        return mapper.Map<ToClientEmployees>(GetEmployees());
+        return mapper.Map<ToClientEmployees>(GetEmployeesAsync());
 
         #region Nested_Helpers
 
-        Employees GetEmployees() => 
-            _employees.GetCompanyEmployees(companyId, trackChanges);
+        async Task<Employees> GetEmployeesAsync() => 
+            await _employees.GetCompanyEmployeesAsync(companyId, trackChanges);
 
         #endregion
     }
 
-    public ToClientEmployee GetCompanyEmployee(Guid companyId, Guid employeeId, bool trackChanges)
+    public async Task<ToClientEmployee> GetCompanyEmployeeAsync(Guid companyId, Guid employeeId, bool trackChanges)
     {
-        _ = TryToGetCompany(companyId, trackChanges);
+        _ = await TryToGetCompanyAsync(companyId, trackChanges);
         
-        var employee = GetEmployee();
+        var employee = GetEmployeeAsync();
 
         return ReturnIfEmployeeExistsOrThrow();
 
         #region Nested_Helpers
 
-        Employee? GetEmployee() =>
-            _employees.GetCompanyEmployee(companyId, employeeId, trackChanges);
+        async Task<Employee?> GetEmployeeAsync() =>
+            await _employees.GetCompanyEmployeeAsync(companyId, employeeId, trackChanges);
 
         ToClientEmployee ReturnIfEmployeeExistsOrThrow() =>
             employee is null ?
@@ -41,52 +41,53 @@ internal sealed class EmployeeService(
         #endregion
     }
 
-    public ToClientEmployee CreateCompanyEmployee(
+    public async Task<ToClientEmployee> CreateCompanyEmployeeAsync(
         Guid companyId, EmployeeCreationRequest newEmployee, bool trackChanges)
     {
-        _ = TryToGetCompany(companyId, trackChanges);
+        _ = await TryToGetCompanyAsync(companyId, trackChanges);
         var domainEmployee = mapper.Map<Employee>(newEmployee);
         _employees.CreateCompanyEmployee(companyId, domainEmployee);
-        repository.Save();
+        await repository.SaveAsync();
         return mapper.Map<ToClientEmployee>(domainEmployee);
     }
 
-    public void DeleteCompanyEmployee(Guid companyId, Guid employeeId, bool trackChanges)
+    public async Task DeleteCompanyEmployeeAsync(Guid companyId, Guid employeeId, bool trackChanges)
     {
-        _ = TryToGetCompany(companyId, trackChanges);
-        var employee = TryToGetEmployee(companyId, employeeId, trackChanges);
+        _ = await TryToGetCompanyAsync(companyId, trackChanges);
+        var employee = await TryToGetEmployeeAsync(companyId, employeeId, trackChanges);
         
         _employees.DeleteCompanyEmployee(employee);
-        repository.Save();
+        await repository.SaveAsync();
     }
 
-    public void UpdateCompanyEmployee(CompanyEmployeeUpdateParameters empUpdate)
+    public async Task UpdateCompanyEmployeeAsync(CompanyEmployeeUpdateParameters empUpdate)
     {
-        _ = TryToGetCompany(empUpdate.CmpId, empUpdate.CmpTrackChanges);
-        var employee = TryToGetEmployee(empUpdate.CmpId, empUpdate.EmpId, empUpdate.EmpTrackChanges);
+        _ = await TryToGetCompanyAsync(empUpdate.CmpId, empUpdate.CmpTrackChanges);
+        var employee = await TryToGetEmployeeAsync(empUpdate.CmpId, empUpdate.EmpId, empUpdate.EmpTrackChanges);
         mapper.Map(empUpdate.EmpUpdate, employee);
-        repository.Save();
+        await repository.SaveAsync();
     }
 
-    public (EmployeeUpdateRequest updateEmp, Employee domainEmp) GetPatchEmployee(EmployeePatchParameters empPatch)
+    public async Task<(EmployeeUpdateRequest updateEmp, Employee domainEmp)> GetPatchEmployeeAsync(
+        EmployeePatchParameters empPatch)
     {
-        _ = TryToGetCompany(empPatch.CmpId, empPatch.CmpTrackChanges);
-        Employee domainEmp = TryToGetEmployee(empPatch.CmpId, empPatch.EmpId, empPatch.EmpTrackChanges);
+        _ = await TryToGetCompanyAsync(empPatch.CmpId, empPatch.CmpTrackChanges);
+        Employee domainEmp = await TryToGetEmployeeAsync(empPatch.CmpId, empPatch.EmpId, empPatch.EmpTrackChanges);
         var updateEmp = mapper.Map<EmployeeUpdateRequest>(domainEmp);
         return (updateEmp, domainEmp);
     }
 
-    public void ApplyPatch(EmployeeUpdateRequest updateEmp, Employee domainEmp)
+    public async Task ApplyPatchAsync(EmployeeUpdateRequest updateEmp, Employee domainEmp)
     {
         mapper.Map(updateEmp, domainEmp);
-        repository.Save();
+        await repository.SaveAsync();
     }
 
-    private Company TryToGetCompany(Guid companyId, bool trackChanges) =>
-        _companies.GetCompany(companyId, trackChanges) ??
+    private async Task<Company> TryToGetCompanyAsync(Guid companyId, bool trackChanges) =>
+        await _companies.GetCompanyAsync(companyId, trackChanges) ??
         throw new CompanyNotFoundException(companyId);
     
-    private Employee TryToGetEmployee(Guid companyId, Guid employeeId, bool trackChanges) =>
-        _employees.GetCompanyEmployee(companyId, employeeId, trackChanges) ??
+    private async Task<Employee> TryToGetEmployeeAsync(Guid companyId, Guid employeeId, bool trackChanges) =>
+        await _employees.GetCompanyEmployeeAsync(companyId, employeeId, trackChanges) ??
         throw new EmployeeNotFoundException(employeeId);
 }

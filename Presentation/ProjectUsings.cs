@@ -9,3 +9,5 @@ global using System.ComponentModel;
 global using System.Reflection;
 global using Presentation.ModelBinders;
 global using Shared.DTOs;
+global using Microsoft.AspNetCore.JsonPatch;
+global using Shared.ParameterObjects;

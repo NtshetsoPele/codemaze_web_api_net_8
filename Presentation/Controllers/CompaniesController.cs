@@ -13,91 +13,91 @@ public class CompaniesController(IServiceManager service) : ControllerBase
     #endregion
 
     [HttpGet]
-    public IActionResult GetAllCompanies()
+    public async Task<IActionResult> GetAllCompanies()
     {
-        return Ok(GetCompanies());
+        return Ok(await GetCompaniesAsync());
 
         #region Nested_Helpers
         
-        ClientCompanies GetCompanies() =>
-            _cmpService.GetAllCompanies(trackChanges: false);
+        async Task<ClientCompanies> GetCompaniesAsync() =>
+            await _cmpService.GetAllCompaniesAsync(trackChanges: false);
 
         #endregion
     }
 
     [HttpGet(template: "{companyId:guid}", Name = CompanyById)]
-    public IActionResult GetCompanyById([FromRoute] Guid companyId)
+    public async Task<IActionResult> GetCompanyById([FromRoute] Guid companyId)
     {
-        return Ok(GetCompany());
+        return Ok(await GetCompanyAsync());
 
         #region Nested_Helpers
         
-        ToClientCompany GetCompany() =>
-            _cmpService.GetCompanyById(companyId, trackChanges: false);
+        async Task<ToClientCompany> GetCompanyAsync() =>
+            await _cmpService.GetCompanyByIdAsync(companyId, trackChanges: false);
         
         #endregion
     }
 
     [HttpPost]
-    public IActionResult CreateCompany([FromBody] CompanyCreationRequest? company)
+    public async Task<IActionResult> CreateCompany([FromBody] CompanyCreationRequest? company)
     {
         if (company is null)
         {
             return BadRequest($"{nameof(company)} object is null");
         }
 
-        var newCompany = _cmpService.CreateCompany(company);
+        var newCompany = await _cmpService.CreateCompanyAsync(company);
         
         return CreatedAtRoute(CompanyById, new { newCompany.CompanyId }, newCompany);
     }
 
     [HttpGet(template: "collection/({companyIds})", Name = CompanyCollection)]
-    public IActionResult GetCompanyCollection(
+    public async Task<IActionResult> GetCompanyCollection(
         [ModelBinder(binderType: typeof(ArrayModelBinder))] IEnumerable<Guid> companyIds)
     {
-        return Ok(GetCompanies());
+        return Ok(await GetCompaniesAsync());
 
         #region Nested_Helpers
 
-        ClientCompanies GetCompanies() =>
-            _cmpService.GetCompaniesByIds(ids: companyIds, trackChanges: false);
+        async Task<ClientCompanies> GetCompaniesAsync() =>
+            await _cmpService.GetCompaniesByIdsAsync(ids: companyIds, trackChanges: false);
 
         #endregion
     }
 
     [HttpPost(template: "collection")]
-    public IActionResult CreateCompanyCollection(
+    public async Task<IActionResult> CreateCompanyCollection(
         [FromBody] IEnumerable<CompanyCreationRequest> newCompanies)
     {
-        var (clientCompanies, ids) = CreateCompanies();
+        var (clientCompanies, ids) = await CreateCompaniesAsync();
 
         return CreatedAtRoute(CompanyCollection, new { companyIds = ids }, clientCompanies);
 
         #region Nested_Helpers
 
-        (ClientCompanies clientCompanies, string ids) CreateCompanies() =>
-            _cmpService.CreateCompanyCollection(newCompanies);
+        async Task<(ClientCompanies clientCompanies, string ids)> CreateCompaniesAsync() =>
+            await _cmpService.CreateCompanyCollectionAsync(newCompanies);
 
         #endregion
     }
 
     [HttpDelete(template: "{companyId:guid}")]
-    public IActionResult DeleteCompany(Guid companyId)
+    public async Task<IActionResult> DeleteCompany(Guid companyId)
     {
-        _cmpService.DeleteCompanyById(companyId, trackChanges: false);
+        await _cmpService.DeleteCompanyByIdAsync(companyId, trackChanges: false);
         
         return NoContent();
     }
 
     [HttpPut(template: "{companyId:guid}")]
-    public IActionResult UpdateCompany(Guid companyId, [FromBody] CompanyUpdateRequest? companyUpdate)
+    public async Task<IActionResult> UpdateCompany(Guid companyId, [FromBody] CompanyUpdateRequest? companyUpdate)
     {
         if (companyUpdate is null)
         {
             return BadRequest($"{nameof(companyUpdate)} object is null");
         }
         
-        _cmpService.UpdateCompany(companyId, companyUpdate, trackChanges: true);
+        await _cmpService.UpdateCompanyAsync(companyId, companyUpdate, trackChanges: true);
 
         return NoContent();
     }

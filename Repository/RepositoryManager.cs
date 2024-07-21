@@ -12,5 +12,5 @@ public sealed class RepositoryManager(RepositoryContext context) : IRepositoryMa
     /// <exception cref="DbUpdateConcurrencyException">A concurrency violation is encountered while saving to the database.
     ///                 A concurrency violation occurs when an unexpected number of rows are affected during save.
     ///                 This is usually because the data in the database has been modified since it was loaded into memory.</exception>
-    public void Save() => context.SaveChanges();
+    public async Task SaveAsync() => await context.SaveChangesAsync();
 }

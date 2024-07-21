@@ -5,27 +5,27 @@ internal sealed class CompanyService(
 {
     private readonly ICompanyRepository _companies = repository.Company;
     
-    public ClientCompanies GetAllCompanies(bool trackChanges)
+    public async Task<ClientCompanies> GetAllCompaniesAsync(bool trackChanges)
     {
-        return mapper.Map<ClientCompanies>(GetCompanies());
+        return mapper.Map<ClientCompanies>(await GetCompaniesAsync());
 
         #region Nested_Helpers
 
-        Companies GetCompanies() => _companies.GetAllCompanies(trackChanges);
+        async Task<Companies> GetCompaniesAsync() => await _companies.GetAllCompaniesAsync(trackChanges);
 
         #endregion
     }
 
     /// <exception cref="CompanyNotFoundException">Condition.</exception>
-    public ToClientCompany GetCompanyById(Guid id, bool trackChanges)
+    public async Task<ToClientCompany> GetCompanyByIdAsync(Guid id, bool trackChanges)
     {
-        var domainCompany = GetCompany();
+        var domainCompany = await GetCompanyAsync();
 
         return ReturnCompanyIfFound();
 
         #region Nested_Helpers
 
-        Company? GetCompany() => _companies.GetCompany(id, trackChanges);
+        async Task<Company?> GetCompanyAsync() => await _companies.GetCompanyAsync(id, trackChanges);
 
         ToClientCompany ReturnCompanyIfFound() =>
             domainCompany is null
@@ -35,22 +35,22 @@ internal sealed class CompanyService(
         #endregion
     }
 
-    public ToClientCompany CreateCompany(CompanyCreationRequest company)
+    public async Task<ToClientCompany> CreateCompanyAsync(CompanyCreationRequest company)
     {
         Company domainCompany = mapper.Map<Company>(company);
         _companies.CreateCompany(domainCompany);
-        repository.Save();
+        await repository.SaveAsync();
         return mapper.Map<ToClientCompany>(domainCompany);
     }
 
     /// <exception cref="IdParametersBadRequestException">Condition.</exception>
     /// <exception cref="CollectionByIdsBadRequestException">Condition.</exception>
-    public ClientCompanies GetCompaniesByIds(CompanyIds ids, bool trackChanges)
+    public async Task<ClientCompanies> GetCompaniesByIdsAsync(CompanyIds ids, bool trackChanges)
     {
         ThrowIfCompanyIdsIsNull();
         
         List<Guid> companyIdsList = ids.ToList();
-        Companies domainCompanies = GetCompanies();
+        Companies domainCompanies = await GetCompaniesAsync();
 
         ThrowIfCompanyCountsMismatch();
         
@@ -66,8 +66,8 @@ internal sealed class CompanyService(
             }
         }
         
-        Companies GetCompanies() =>
-            _companies.GetCompaniesByTheirIds(companyIdsList, trackChanges);
+        async Task<Companies> GetCompaniesAsync() =>
+            await _companies.GetCompaniesByTheirIdsAsync(companyIdsList, trackChanges);
 
         void ThrowIfCompanyCountsMismatch()
         {
@@ -82,7 +82,7 @@ internal sealed class CompanyService(
 
     /// <exception cref="OutOfMemoryException">The length of the resulting string overflows the maximum allowed length (<see cref="System.Int32.MaxValue">Int32.MaxValue</see>).</exception>
     /// <exception cref="CompanyCollectionBadRequest">Condition.</exception>
-    public (ClientCompanies clientCompanies, string ids) CreateCompanyCollection(NewCompanies? newCompanies)
+    public async Task<(ClientCompanies clientCompanies, string ids)> CreateCompanyCollectionAsync(NewCompanies? newCompanies)
     {
         if (newCompanies is null)
         {
@@ -94,7 +94,7 @@ internal sealed class CompanyService(
         {
             _companies.CreateCompany(company);
         }
-        repository.Save();
+        await repository.SaveAsync();
 
         var clientCompanies = mapper.Map<ClientCompanies>(companies).ToList();
         var companyIds = string.Join(",", clientCompanies.Select((ToClientCompany c) => c.CompanyId));
@@ -102,21 +102,21 @@ internal sealed class CompanyService(
         return (clientCompanies, companyIds);
     }
 
-    public void DeleteCompanyById(Guid companyId, bool trackChanges)
+    public async Task DeleteCompanyByIdAsync(Guid companyId, bool trackChanges)
     {
-        var domainCompany = TryToGetCompany(companyId, trackChanges);
+        var domainCompany = await TryToGetCompanyAsync(companyId, trackChanges);
         _companies.DeleteCompany(domainCompany);
-        repository.Save();
+        await repository.SaveAsync();
     }
 
-    public void UpdateCompany(Guid companyId, CompanyUpdateRequest companyUpdate, bool trackChanges)
+    public async Task UpdateCompanyAsync(Guid companyId, CompanyUpdateRequest companyUpdate, bool trackChanges)
     {
-        var domainCompany = TryToGetCompany(companyId, trackChanges);
+        var domainCompany = await TryToGetCompanyAsync(companyId, trackChanges);
         mapper.Map(companyUpdate, domainCompany);
-        repository.Save();
+        await repository.SaveAsync();
     }
     
-    Company TryToGetCompany(Guid companyId, bool trackChanges) =>
-        _companies.GetCompany(companyId, trackChanges) ??
+    async Task<Company> TryToGetCompanyAsync(Guid companyId, bool trackChanges) =>
+        await _companies.GetCompanyAsync(companyId, trackChanges) ??
         throw new CompanyNotFoundException(companyId);
 }

@@ -3,24 +3,24 @@
 public class CompanyRepository(RepositoryContext context) : 
     RepositoryBase<Company>(context), ICompanyRepository
 {
-    public IEnumerable<Company> GetAllCompanies(bool trackChanges)
+    public async Task<IEnumerable<Company>> GetAllCompaniesAsync(bool trackChanges)
     {
-        return [.. FindAll(trackChanges).OrderBy((Company c) => c.Name)];
+        return await FindAll(trackChanges).OrderBy((Company c) => c.Name).ToListAsync();
     }
 
-    public Company? GetCompany(Guid companyId, bool trackChanges)
+    public async Task<Company?> GetCompanyAsync(Guid companyId, bool trackChanges)
     {
-        return FindByCondition(
+        return await FindByCondition(
                 (Company c) => c.CompanyId.Equals(companyId),
                 trackChanges)
-            .SingleOrDefault();
+            .SingleOrDefaultAsync();
     }
 
     public void CreateCompany(Company company) => Create(company);
 
-    public IEnumerable<Company> GetCompaniesByTheirIds(IEnumerable<Guid> ids, bool trackChanges)
+    public async Task<IEnumerable<Company>> GetCompaniesByTheirIdsAsync(IEnumerable<Guid> ids, bool trackChanges)
     {
-        return [.. FindByCondition((Company c) => ids.Contains(c.CompanyId), trackChanges)];
+        return await FindByCondition((Company c) => ids.Contains(c.CompanyId), trackChanges).ToListAsync();
     }
 
     public void DeleteCompany(Company company) => base.Delete(company);

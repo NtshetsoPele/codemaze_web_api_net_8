@@ -2,18 +2,18 @@
 
 public class EmployeeRepository(RepositoryContext context) : RepositoryBase<Employee>(context), IEmployeeRepository
 {
-    public IEnumerable<Employee> GetCompanyEmployees(Guid companyId, bool trackChanges)
+    public async Task<IEnumerable<Employee>> GetCompanyEmployeesAsync(Guid companyId, bool trackChanges)
     {
-        return [.. FindByCondition((Employee e) => e.CompanyId.Equals(companyId), trackChanges: false)
-            .OrderBy((Employee e) => e.Name)];
+        return await FindByCondition((Employee e) => e.CompanyId.Equals(companyId), trackChanges: false)
+            .OrderBy((Employee e) => e.Name).ToListAsync();
     }
 
-    public Employee? GetCompanyEmployee(Guid companyId, Guid employeeId, bool trackChanges)
+    public async Task<Employee?> GetCompanyEmployeeAsync(Guid companyId, Guid employeeId, bool trackChanges)
     {
-        return FindByCondition(
+        return await FindByCondition(
                 (Employee e) => e.CompanyId.Equals(companyId) && e.EmployeeId.Equals(employeeId), 
                 trackChanges)
-            .SingleOrDefault();
+            .SingleOrDefaultAsync();
     }
 
     public void CreateCompanyEmployee(Guid companyId, Employee employee)

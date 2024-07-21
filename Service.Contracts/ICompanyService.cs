@@ -2,11 +2,11 @@
 
 public interface ICompanyService
 {
-    ClientCompanies GetAllCompanies(bool trackChanges);
-    ToClientCompany GetCompanyById(Guid id, bool trackChanges);
-    ToClientCompany CreateCompany(CompanyCreationRequest company);
-    ClientCompanies GetCompaniesByIds(CompanyIds ids, bool trackChanges);
-    (ClientCompanies clientCompanies, string ids) CreateCompanyCollection(NewCompanies newCompanies);
-    void DeleteCompanyById(Guid companyId, bool trackChanges);
-    void UpdateCompany(Guid companyId, CompanyUpdateRequest companyUpdate, bool trackChanges);
+    Task<ClientCompanies> GetAllCompaniesAsync(bool trackChanges);
+    Task<ToClientCompany> GetCompanyByIdAsync(Guid id, bool trackChanges);
+    Task<ToClientCompany> CreateCompanyAsync(CompanyCreationRequest company);
+    Task<ClientCompanies> GetCompaniesByIdsAsync(CompanyIds ids, bool trackChanges);
+    Task<(ClientCompanies clientCompanies, string ids)> CreateCompanyCollectionAsync(NewCompanies newCompanies);
+    Task DeleteCompanyByIdAsync(Guid companyId, bool trackChanges);
+    Task UpdateCompanyAsync(Guid companyId, CompanyUpdateRequest companyUpdate, bool trackChanges);
 }
