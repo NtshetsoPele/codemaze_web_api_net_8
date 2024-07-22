@@ -44,11 +44,6 @@ public class CompaniesController(IServiceManager service) : ControllerBase
     [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> CreateCompany([FromBody] CompanyCreationRequest? company)
     {
-        if (company is null)
-        {
-            return BadRequest($"{nameof(company)} object is null");
-        }
-
         var newCompany = await _cmpService.CreateCompanyAsync(company);
         
         return CreatedAtRoute(CompanyById, new { newCompany.CompanyId }, newCompany);
@@ -96,11 +91,6 @@ public class CompaniesController(IServiceManager service) : ControllerBase
     [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> UpdateCompany(Guid companyId, [FromBody] CompanyUpdateRequest? companyUpdate)
     {
-        if (companyUpdate is null)
-        {
-            return BadRequest($"{nameof(companyUpdate)} object is null");
-        }
-        
         await _cmpService.UpdateCompanyAsync(companyId, companyUpdate, trackChanges: true);
 
         return NoContent();
