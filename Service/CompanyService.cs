@@ -11,7 +11,8 @@ internal sealed class CompanyService(
 
         #region Nested_Helpers
 
-        async Task<Companies> GetCompaniesAsync() => await _companies.GetAllCompaniesAsync(trackChanges);
+        async Task<Companies> GetCompaniesAsync() => 
+            await _companies.GetAllCompaniesAsync(trackChanges);
 
         #endregion
     }
@@ -19,20 +20,9 @@ internal sealed class CompanyService(
     /// <exception cref="CompanyNotFoundException">Condition.</exception>
     public async Task<ToClientCompany> GetCompanyByIdAsync(Guid id, bool trackChanges)
     {
-        var domainCompany = await GetCompanyAsync();
+        var domainCompany = await TryToGetCompanyAsync(id, trackChanges);
 
-        return ReturnCompanyIfFound();
-
-        #region Nested_Helpers
-
-        async Task<Company?> GetCompanyAsync() => await _companies.GetCompanyAsync(id, trackChanges);
-
-        ToClientCompany ReturnCompanyIfFound() =>
-            domainCompany is null
-                ? throw new CompanyNotFoundException(id)
-                : mapper.Map<ToClientCompany>(domainCompany);
-
-        #endregion
+        return mapper.Map<ToClientCompany>(domainCompany);
     }
 
     public async Task<ToClientCompany> CreateCompanyAsync(CompanyCreationRequest company)
@@ -47,18 +37,15 @@ internal sealed class CompanyService(
     /// <exception cref="CollectionByIdsBadRequestException">Condition.</exception>
     public async Task<ClientCompanies> GetCompaniesByIdsAsync(CompanyIds ids, bool trackChanges)
     {
-        ThrowIfCompanyIdsIsNull();
-        
+        ThrowIfCompanyIdsAreNull();
         List<Guid> companyIdsList = ids.ToList();
         Companies domainCompanies = await GetCompaniesAsync();
-
         ThrowIfCompanyCountsMismatch();
-        
         return mapper.Map<ClientCompanies>(domainCompanies);
 
         #region Nested_Helpers
 
-        void ThrowIfCompanyIdsIsNull()
+        void ThrowIfCompanyIdsAreNull()
         {
             if (ids is null)
             {
@@ -115,8 +102,8 @@ internal sealed class CompanyService(
         mapper.Map(companyUpdate, domainCompany);
         await repository.SaveAsync();
     }
-    
-    async Task<Company> TryToGetCompanyAsync(Guid companyId, bool trackChanges) =>
+
+    private async Task<Company> TryToGetCompanyAsync(Guid companyId, bool trackChanges) =>
         await _companies.GetCompanyAsync(companyId, trackChanges) ??
         throw new CompanyNotFoundException(companyId);
 }
