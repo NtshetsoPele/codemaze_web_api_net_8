@@ -12,3 +12,6 @@ global using Shared.DTOs;
 global using Microsoft.AspNetCore.JsonPatch;
 global using Shared.ParameterObjects;
 global using Microsoft.AspNetCore.Mvc.Filters;
+global using Presentation.ActionFilters;
+global using Shared.RequestFeatures;
+global using System.Text.Json;

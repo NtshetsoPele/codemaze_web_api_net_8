@@ -1,6 +1,4 @@
-﻿using Presentation.ActionFilters;
-
-namespace Presentation.Controllers;
+﻿namespace Presentation.Controllers;
 
 [ApiController]
 [Route(template: "api/[controller]")]
@@ -91,7 +89,7 @@ public class CompaniesController(IServiceManager service) : ControllerBase
     [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> UpdateCompany(Guid companyId, [FromBody] CompanyUpdateRequest? companyUpdate)
     {
-        await _cmpService.UpdateCompanyAsync(companyId, companyUpdate, trackChanges: true);
+        await _cmpService.UpdateCompanyAsync(companyId, companyUpdate!, trackChanges: true);
 
         return NoContent();
     }

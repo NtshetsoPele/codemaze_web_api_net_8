@@ -17,7 +17,6 @@ internal sealed class CompanyService(
         #endregion
     }
 
-    /// <exception cref="CompanyNotFoundException">Condition.</exception>
     public async Task<ToClientCompany> GetCompanyByIdAsync(Guid id, bool trackChanges)
     {
         var domainCompany = await TryToGetCompanyAsync(id, trackChanges);

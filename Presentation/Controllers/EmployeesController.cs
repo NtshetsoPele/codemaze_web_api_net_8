@@ -12,14 +12,19 @@ public class EmployeesController(IServiceManager service) : ControllerBase
     #endregion
 
     [HttpGet]
-    public async Task<IActionResult> GetCompanyEmployees([FromRoute] Guid companyId)
+    public async Task<IActionResult> GetCompanyEmployees(
+        [FromRoute] Guid companyId, [FromQuery] EmployeeParameters parameters)
     {
-        return Ok(await GetEmployeesAsync());
+        (ClientEmployees employees, MetaData metaData) = await GetEmployeesAsync();
+
+        Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(metaData));
+        
+        return Ok(employees);
 
         #region Nested_Helpers
 
-        async Task<ClientEmployees> GetEmployeesAsync() =>
-            await _empService.GetCompanyEmployeesAsync(companyId, trackChanges: false);
+        async Task<(ClientEmployees, MetaData)> GetEmployeesAsync() =>
+            await _empService.GetCompanyEmployeesAsync(companyId, parameters, trackChanges: false);
 
         #endregion
     }

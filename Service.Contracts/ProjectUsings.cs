@@ -7,3 +7,4 @@ global using ClientCompanies = System.Collections.Generic.IEnumerable<Shared.DTO
 global using Shared.ParameterObjects;
 global using Shared.DTOs;
 global using Entities.Models;
+global using Shared.RequestFeatures;

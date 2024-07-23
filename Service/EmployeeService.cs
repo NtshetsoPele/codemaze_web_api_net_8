@@ -6,18 +6,17 @@ internal sealed class EmployeeService(
     private readonly ICompanyRepository _companies = repository.Company;
     private readonly IEmployeeRepository _employees = repository.Employee;
     
-    public async Task<ToClientEmployees> GetCompanyEmployeesAsync(Guid companyId, bool trackChanges)
+    public async Task<(ClientEmployees employees, MetaData metaData)> GetCompanyEmployeesAsync(
+        Guid companyId, EmployeeParameters parameters, bool trackChanges)
     {
         _ = await TryToGetCompanyAsync(companyId, trackChanges);
 
-        return mapper.Map<ToClientEmployees>(GetEmployeesAsync());
+        PagedList<Employee> employeesWithMetaData = await 
+            _employees.GetCompanyEmployeesAsync(companyId, parameters, trackChanges);
 
-        #region Nested_Helpers
-
-        async Task<Employees> GetEmployeesAsync() => 
-            await _employees.GetCompanyEmployeesAsync(companyId, trackChanges);
-
-        #endregion
+        var clientEmployees = mapper.Map<ClientEmployees>(employeesWithMetaData);
+        
+        return (clientEmployees, employeesWithMetaData.MetaData);
     }
 
     public async Task<ToClientEmployee> GetCompanyEmployeeAsync(Guid companyId, Guid employeeId, bool trackChanges)

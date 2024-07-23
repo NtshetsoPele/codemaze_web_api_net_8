@@ -2,7 +2,8 @@
 
 public interface IEmployeeService
 {
-    Task<ClientEmployees> GetCompanyEmployeesAsync(Guid companyId, bool trackChanges);
+    Task<(ClientEmployees employees, MetaData metaData)> GetCompanyEmployeesAsync(
+        Guid companyId, EmployeeParameters parameters, bool trackChanges);
     Task<ToClientEmployee> GetCompanyEmployeeAsync(Guid companyId, Guid employeeId, bool trackChanges);
     Task<ToClientEmployee> CreateCompanyEmployeeAsync(Guid companyId, EmployeeCreationRequest newEmployee, bool trackChanges);
     Task DeleteCompanyEmployeeAsync(Guid companyId, Guid employeeId, bool trackChanges);
