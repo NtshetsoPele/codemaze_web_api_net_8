@@ -16,4 +16,20 @@ public static class RepositoryEmployeeExtensions
         string lowerCaseTerm = searchTerm.Trim().ToLower();
         return employees.Where((Employee e) => e.Name.Contains(lowerCaseTerm));
     }
+
+    public static IQueryable<Employee> Sort(this IQueryable<Employee> employees, string orderByQueryString)
+    {
+        if (string.IsNullOrWhiteSpace(orderByQueryString))
+        {
+            return employees.OrderBy((Employee e) => e.Name);
+        }
+        
+        var orderQuery = OrderQueryBuilder.CreateOrderQuery<Employee>(orderByQueryString);
+        
+        if (string.IsNullOrWhiteSpace(orderQuery))
+        {
+            return employees.OrderBy((Employee e) => e.Name);
+        }
+        return employees.OrderBy(orderQuery);
+    }
 }
