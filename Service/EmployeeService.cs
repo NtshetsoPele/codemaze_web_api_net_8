@@ -9,6 +9,8 @@ internal sealed class EmployeeService(
     public async Task<(ClientEmployees employees, MetaData metaData)> GetCompanyEmployeesAsync(
         Guid companyId, EmployeeParameters employeeParameters, bool trackChanges)
     {
+        ThrowIfAgeRangeIsInvalid(employeeParameters);
+        
         _ = await TryToGetCompanyAsync(companyId, trackChanges);
 
         PagedList<Employee> employeesWithMetaData = await 
@@ -82,6 +84,14 @@ internal sealed class EmployeeService(
         await repository.SaveAsync();
     }
 
+    private static void ThrowIfAgeRangeIsInvalid(EmployeeParameters parameters)
+    {
+        if (!parameters.ValidAgeRange)
+        {
+            throw new AgeRangeBadRequestException();
+        }
+    }
+    
     private async Task<Company> TryToGetCompanyAsync(Guid companyId, bool trackChanges) =>
         await _companies.GetCompanyAsync(companyId, trackChanges) ??
         throw new CompanyNotFoundException(companyId);

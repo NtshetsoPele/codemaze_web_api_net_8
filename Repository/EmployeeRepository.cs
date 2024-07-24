@@ -6,7 +6,7 @@ public class EmployeeRepository(RepositoryContext context) : RepositoryBase<Empl
         Guid companyId, EmployeeParameters employeeParameters, bool trackChanges)
     {
         List<Employee> employees = await GetEmployees(companyId, employeeParameters, trackChanges);
-        int employeeCount = await GetEmployeeCountAsync(companyId, trackChanges);
+        int employeeCount = await GetEmployeeCountAsync(companyId, employeeParameters, trackChanges);
         return new PagedList<Employee>(
             employees, 
             employeeCount, 
@@ -18,16 +18,24 @@ public class EmployeeRepository(RepositoryContext context) : RepositoryBase<Empl
         Guid companyId, EmployeeParameters employeeParameters, bool trackChanges)
     {
         return await 
-            FindByCondition((Employee e) => e.CompanyId.Equals(companyId), trackChanges)
+            FindByCondition((Employee e) => 
+                    e.CompanyId.Equals(companyId) &&
+                    e.Age <= employeeParameters.MaxAge &&
+                    e.Age >= employeeParameters.MinAge, trackChanges)
                 .OrderBy((Employee e) => e.Name)
                 .Skip((employeeParameters.PageNumber - 1) * employeeParameters.PageSize)
                 .Take(employeeParameters.PageSize)
                 .ToListAsync();
     }
     
-    private async Task<int> GetEmployeeCountAsync(Guid companyId, bool trackChanges) =>
-        await FindByCondition((Employee e) => e.CompanyId.Equals(companyId), trackChanges)
-            .CountAsync();
+    private async Task<int> GetEmployeeCountAsync(
+        Guid companyId, EmployeeParameters employeeParameters, bool trackChanges) =>
+        await 
+            FindByCondition((Employee e) => e.
+                    CompanyId.Equals(companyId) &&
+                    e.Age <= employeeParameters.MaxAge &&
+                    e.Age >= employeeParameters.MinAge, trackChanges)
+                .CountAsync();
 
     /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>
     public async Task<Employee?> GetCompanyEmployeeAsync(Guid companyId, Guid employeeId, bool trackChanges)
