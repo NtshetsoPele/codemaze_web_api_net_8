@@ -3,20 +3,26 @@
 public class EmployeeRepository(RepositoryContext context) : RepositoryBase<Employee>(context), IEmployeeRepository
 {
     public async Task<PagedList<Employee>> GetCompanyEmployeesAsync(
-        Guid companyId, EmployeeParameters parameters, bool trackChanges)
+        Guid companyId, EmployeeParameters employeeParameters, bool trackChanges)
     {
-        List<Employee> employees = await GetEmployees(companyId, parameters, trackChanges);
-        var employeeCount = await GetEmployeeCountAsync(companyId, trackChanges);
-        return new PagedList<Employee>(employees, employeeCount, parameters.PageNumber, parameters.PageSize);
+        List<Employee> employees = await GetEmployees(companyId, employeeParameters, trackChanges);
+        int employeeCount = await GetEmployeeCountAsync(companyId, trackChanges);
+        return new PagedList<Employee>(
+            employees, 
+            employeeCount, 
+            employeeParameters.PageNumber, 
+            employeeParameters.PageSize);
     }
 
-    private async Task<List<Employee>> GetEmployees(Guid companyId, EmployeeParameters parameters, bool trackChanges)
+    private async Task<List<Employee>> GetEmployees(
+        Guid companyId, EmployeeParameters employeeParameters, bool trackChanges)
     {
-        return await FindByCondition((Employee e) => e.CompanyId.Equals(companyId), trackChanges)
-            .OrderBy(e => e.Name)
-            .Skip((parameters.PageNumber - 1) * parameters.PageSize)
-            .Take(parameters.PageSize)
-            .ToListAsync();
+        return await 
+            FindByCondition((Employee e) => e.CompanyId.Equals(companyId), trackChanges)
+                .OrderBy((Employee e) => e.Name)
+                .Skip((employeeParameters.PageNumber - 1) * employeeParameters.PageSize)
+                .Take(employeeParameters.PageSize)
+                .ToListAsync();
     }
     
     private async Task<int> GetEmployeeCountAsync(Guid companyId, bool trackChanges) =>
