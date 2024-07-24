@@ -18,10 +18,9 @@ public class EmployeeRepository(RepositoryContext context) : RepositoryBase<Empl
         Guid companyId, EmployeeParameters employeeParameters, bool trackChanges)
     {
         return await 
-            FindByCondition((Employee e) => 
-                    e.CompanyId.Equals(companyId) &&
-                    e.Age <= employeeParameters.MaxAge &&
-                    e.Age >= employeeParameters.MinAge, trackChanges)
+            FindByCondition((Employee e) => e.CompanyId.Equals(companyId), trackChanges)
+                .FilterEmployees(employeeParameters.MinAge, employeeParameters.MaxAge)
+                .Search(employeeParameters.SearchTerm)
                 .OrderBy((Employee e) => e.Name)
                 .Skip((employeeParameters.PageNumber - 1) * employeeParameters.PageSize)
                 .Take(employeeParameters.PageSize)
@@ -31,10 +30,8 @@ public class EmployeeRepository(RepositoryContext context) : RepositoryBase<Empl
     private async Task<int> GetEmployeeCountAsync(
         Guid companyId, EmployeeParameters employeeParameters, bool trackChanges) =>
         await 
-            FindByCondition((Employee e) => e.
-                    CompanyId.Equals(companyId) &&
-                    e.Age <= employeeParameters.MaxAge &&
-                    e.Age >= employeeParameters.MinAge, trackChanges)
+            FindByCondition((Employee e) => e.CompanyId.Equals(companyId), trackChanges)
+                .FilterEmployees(employeeParameters.MinAge, employeeParameters.MaxAge)
                 .CountAsync();
 
     /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>

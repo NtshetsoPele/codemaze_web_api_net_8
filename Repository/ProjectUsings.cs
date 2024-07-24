@@ -5,3 +5,4 @@ global using Repository.Configuration;
 global using Contracts;
 global using System.Linq.Expressions;
 global using Shared.RequestFeatures;
+global using Repository.Extensions;
