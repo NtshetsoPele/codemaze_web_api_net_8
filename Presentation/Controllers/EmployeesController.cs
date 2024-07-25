@@ -12,6 +12,7 @@ public class EmployeesController(IServiceManager service) : ControllerBase
     #endregion
 
     [HttpGet]
+    [HttpHead]
     public async Task<IActionResult> GetCompanyEmployees(
         [FromRoute] Guid companyId, [FromQuery] EmployeeParameters parameters)
     {
