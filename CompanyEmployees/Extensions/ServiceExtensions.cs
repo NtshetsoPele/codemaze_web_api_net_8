@@ -1,5 +1,7 @@
-﻿using IServices = Microsoft.Extensions.DependencyInjection.IServiceCollection;
+﻿using AutoMapper;
+using IServices = Microsoft.Extensions.DependencyInjection.IServiceCollection;
 using IConfig = Microsoft.Extensions.Configuration.IConfiguration;
+using Service.DataShaper;
 
 namespace CompanyEmployees.Extensions;
 
@@ -44,5 +46,10 @@ public static class ServiceExtensions
     {
         return services.AddDbContext<RepositoryContext>((DbContextOptionsBuilder opts) =>
             opts.UseSqlServer(config.GetConnectionString(Resources.SqlConn)));
+    }
+    
+    public static IServices ConfigureEmployeeDataShaper(this IServices services)
+    {
+        return services.AddScoped<IDataShaper<ToClientEmployee>, DataShaper<ToClientEmployee>>();
     }
 }

@@ -15,7 +15,7 @@ public class EmployeesController(IServiceManager service) : ControllerBase
     public async Task<IActionResult> GetCompanyEmployees(
         [FromRoute] Guid companyId, [FromQuery] EmployeeParameters parameters)
     {
-        (ClientEmployees employees, MetaData metaData) = await GetEmployeesAsync();
+        (IEnumerable<ExpandoObject> employees, MetaData metaData) = await GetEmployeesAsync();
 
         Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(metaData));
         
@@ -23,7 +23,7 @@ public class EmployeesController(IServiceManager service) : ControllerBase
 
         #region Nested_Helpers
 
-        async Task<(ClientEmployees, MetaData)> GetEmployeesAsync() =>
+        async Task<(IEnumerable<ExpandoObject>, MetaData)> GetEmployeesAsync() =>
             await _empService.GetCompanyEmployeesAsync(companyId, parameters, trackChanges: false);
 
         #endregion

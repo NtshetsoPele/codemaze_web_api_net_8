@@ -1,12 +1,12 @@
 ﻿namespace Service;
 
 internal sealed class EmployeeService(
-    IRepositoryManager repository, ILoggerManager logger, IMapper mapper) : IEmployeeService
+    IRepositoryManager repository, ILoggerManager logger, IMapper mapper, IDataShaper<ToClientEmployee> dataShaper) : IEmployeeService
 {
     private readonly ICompanyRepository _companies = repository.Company;
     private readonly IEmployeeRepository _employees = repository.Employee;
     
-    public async Task<(ClientEmployees employees, MetaData metaData)> GetCompanyEmployeesAsync(
+    public async Task<(IEnumerable<ExpandoObject> employees, MetaData metaData)> GetCompanyEmployeesAsync(
         Guid companyId, EmployeeParameters employeeParameters, bool trackChanges)
     {
         ThrowIfAgeRangeIsInvalid(employeeParameters);
@@ -17,8 +17,10 @@ internal sealed class EmployeeService(
             _employees.GetCompanyEmployeesAsync(companyId, employeeParameters, trackChanges);
 
         var clientEmployees = mapper.Map<ClientEmployees>(employeesWithMetaData);
-        
-        return (clientEmployees, employeesWithMetaData.MetaData);
+
+        var shapedData = dataShaper.ShapeData(clientEmployees, employeeParameters.Fields);
+
+        return (shapedData, employeesWithMetaData.MetaData);
     }
 
     public async Task<ToClientEmployee> GetCompanyEmployeeAsync(Guid companyId, Guid employeeId, bool trackChanges)

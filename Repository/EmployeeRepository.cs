@@ -19,11 +19,10 @@ public class EmployeeRepository(RepositoryContext context) : RepositoryBase<Empl
     {
         return await 
             FindByCondition((Employee e) => e.CompanyId.Equals(companyId), trackChanges)
-                .FilterEmployees(employeeParameters.MinAge, employeeParameters.MaxAge)
+                .Filter(employeeParameters.MinAge, employeeParameters.MaxAge)
                 .Search(employeeParameters.SearchTerm)
                 .Sort(employeeParameters.OrderBy)
-                .Skip((employeeParameters.PageNumber - 1) * employeeParameters.PageSize)
-                .Take(employeeParameters.PageSize)
+                .Paginate(employeeParameters.PageNumber, employeeParameters.PageSize)
                 .ToListAsync();
     }
     
@@ -31,7 +30,7 @@ public class EmployeeRepository(RepositoryContext context) : RepositoryBase<Empl
         Guid companyId, EmployeeParameters employeeParameters, bool trackChanges) =>
         await 
             FindByCondition((Employee e) => e.CompanyId.Equals(companyId), trackChanges)
-                .FilterEmployees(employeeParameters.MinAge, employeeParameters.MaxAge)
+                .Filter(employeeParameters.MinAge, employeeParameters.MaxAge)
                 .CountAsync();
 
     /// <exception cref="OperationCanceledException">If the <see cref="CancellationToken" /> is canceled.</exception>

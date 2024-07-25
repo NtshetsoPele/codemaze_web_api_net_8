@@ -2,7 +2,7 @@
 
 public interface IEmployeeService
 {
-    Task<(ClientEmployees employees, MetaData metaData)> GetCompanyEmployeesAsync(
+    Task<(IEnumerable<ExpandoObject> employees, MetaData metaData)> GetCompanyEmployeesAsync(
         Guid companyId, EmployeeParameters parameters, bool trackChanges);
     Task<ToClientEmployee> GetCompanyEmployeeAsync(Guid companyId, Guid employeeId, bool trackChanges);
     Task<ToClientEmployee> CreateCompanyEmployeeAsync(Guid companyId, EmployeeCreationRequest newEmployee, bool trackChanges);

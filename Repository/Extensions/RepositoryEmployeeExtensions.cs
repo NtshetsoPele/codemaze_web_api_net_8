@@ -2,7 +2,7 @@
 
 public static class RepositoryEmployeeExtensions
 {
-    public static IQueryable<Employee> FilterEmployees(this IQueryable<Employee> employees, uint minAge, uint maxAge)
+    public static IQueryable<Employee> Filter(this IQueryable<Employee> employees, uint minAge, uint maxAge)
     {
         return employees.Where((Employee e) => e.Age >= minAge && e.Age <= maxAge);
     }
@@ -24,12 +24,21 @@ public static class RepositoryEmployeeExtensions
             return employees.OrderBy((Employee e) => e.Name);
         }
         
-        var orderQuery = OrderQueryBuilder.CreateOrderQuery<Employee>(orderByQueryString);
+        string orderQuery = OrderQueryBuilder.CreateOrderQuery<Employee>(orderByQueryString);
         
         if (string.IsNullOrWhiteSpace(orderQuery))
         {
             return employees.OrderBy((Employee e) => e.Name);
         }
         return employees.OrderBy(orderQuery);
+    }
+    
+    public static IQueryable<Employee> Paginate(
+        this IQueryable<Employee> employees, int pageNumber, int pageSize)
+    {
+        return 
+            employees
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize);
     }
 }

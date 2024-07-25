@@ -23,6 +23,7 @@ public static class ServiceRegistration
             .ConfigureRepositoryManager()
             .ConfigureServiceManager()
             .ConfigureSqlContext(builder.Configuration)
+            .ConfigureEmployeeDataShaper()
             .AddAutoMapper(typeof(MapperAssemblyReference).Assembly)
             .AddScoped<ValidationFilterAttribute>(); ;
     }
