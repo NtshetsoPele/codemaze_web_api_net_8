@@ -28,3 +28,5 @@ global using Shared.DTOs.Responses;
 global using CompanyEmployees.Formatters;
 global using Microsoft.AspNetCore.Mvc;
 global using Presentation.ActionFilters;
+global using Service.DataShaper;
+global using Microsoft.Extensions.Options;

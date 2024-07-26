@@ -40,8 +40,11 @@ public static class ServiceRegistration
                 opts.RespectBrowserAcceptHeader = true;
                 opts.ReturnHttpNotAcceptable = true;
                 opts.OutputFormatters.Add(new CsvOutputFormatter());
+                opts.OutputFormatters
+                    .OfType<SystemTextJsonOutputFormatter>()
+                    .FirstOrDefault()?.SupportedMediaTypes.Add("application/vnd.my-vendor.apiroot+json");
+                opts.InputFormatters.Insert(0, GetJsonPatchInputFormatter());
             })
-            .AddNewtonsoftJson()
             .AddXmlDataContractSerializerFormatters()
             .AddApplicationPart(typeof(PresentationAssemblyReference).Assembly);
     }
@@ -50,4 +53,10 @@ public static class ServiceRegistration
     {
         builder.Host.UseNLog();
     }
+
+    private static NewtonsoftJsonPatchInputFormatter GetJsonPatchInputFormatter() =>
+        new ServiceCollection().AddLogging().AddMvc().AddNewtonsoftJson()
+            .Services.BuildServiceProvider()
+            .GetRequiredService<IOptions<MvcOptions>>().Value.InputFormatters
+            .OfType<NewtonsoftJsonPatchInputFormatter>().First();
 }

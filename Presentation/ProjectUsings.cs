@@ -16,3 +16,5 @@ global using Presentation.ActionFilters;
 global using Shared.RequestFeatures;
 global using System.Text.Json;
 global using System.Dynamic;
+global using Entities.LinkModels;
+global using Microsoft.AspNetCore.Routing;

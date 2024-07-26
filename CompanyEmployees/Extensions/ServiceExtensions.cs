@@ -1,7 +1,5 @@
-﻿using AutoMapper;
-using IServices = Microsoft.Extensions.DependencyInjection.IServiceCollection;
+﻿using IServices = Microsoft.Extensions.DependencyInjection.IServiceCollection;
 using IConfig = Microsoft.Extensions.Configuration.IConfiguration;
-using Service.DataShaper;
 
 namespace CompanyEmployees.Extensions;
 
