@@ -18,3 +18,4 @@ global using System.Text.Json;
 global using System.Dynamic;
 global using Entities.LinkModels;
 global using Microsoft.AspNetCore.Routing;
+global using Asp.Versioning;

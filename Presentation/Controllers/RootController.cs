@@ -1,6 +1,6 @@
 ﻿namespace Presentation.Controllers;
 
-[Route(template: "api"), ApiController]
+[Route(template: "api"), ApiController, ApiVersion(version: "1.0")]
 public class RootController(LinkGenerator linkGenerator) : ControllerBase
 {
     [HttpGet(Name = "GetRoot")]
@@ -17,6 +17,16 @@ public class RootController(LinkGenerator linkGenerator) : ControllerBase
                 href: linkGenerator.GetUriByName(HttpContext, nameof(GetRoot), new {})!,
                 rel: "self",
                 method: "GET"
+            ),
+            new(
+                href: linkGenerator.GetUriByName(HttpContext, "GetCompanies", new {})!,
+                rel: "companies",
+                method: "GET"
+            ),
+            new(
+                href: linkGenerator.GetUriByName(HttpContext, "CreateCompany", new {})!,
+                rel: "create_company",
+                method: "POST"
             )
         };
 

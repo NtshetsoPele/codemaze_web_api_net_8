@@ -1,7 +1,6 @@
 ﻿namespace Presentation.Controllers;
 
-[ApiController]
-[Route(template: "api/[controller]")]
+[ApiController, Route(template: "api/[controller]"), ApiVersion("1.0")]
 public class CompaniesController(IServiceManager service) : ControllerBase
 {
     #region State
@@ -12,7 +11,7 @@ public class CompaniesController(IServiceManager service) : ControllerBase
 
     #endregion
 
-    [HttpGet]
+    [HttpGet(Name = "GetCompanies")]
     public async Task<IActionResult> GetAllCompanies()
     {
         return Ok(await GetCompaniesAsync());
@@ -38,7 +37,7 @@ public class CompaniesController(IServiceManager service) : ControllerBase
         #endregion
     }
 
-    [HttpPost]
+    [HttpPost(Name = "CreateCompany")]
     [ServiceFilter(typeof(ValidationFilterAttribute))]
     public async Task<IActionResult> CreateCompany([FromBody] CompanyCreationRequest? company)
     {

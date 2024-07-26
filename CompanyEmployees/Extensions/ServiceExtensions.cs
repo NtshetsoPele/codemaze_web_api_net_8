@@ -25,29 +25,39 @@ public static class ServiceExtensions
     }
 
     // Not needed. Plugged into the "Hosts" logging framework.
-    public static IServices ConfigureLoggerService(this IServices services)
+    public static IServices AddLoggerService(this IServices services)
     {
         return services.AddSingleton<ILoggerManager, LoggerManager>();
     }
 
-    public static IServices ConfigureRepositoryManager(this IServices services)
+    public static IServices AddRepositoryManager(this IServices services)
     {
         return services.AddScoped<IRepositoryManager, RepositoryManager>();
     }
 
-    public static IServices ConfigureServiceManager(this IServices services)
+    public static IServices AddServiceManager(this IServices services)
     {
         return services.AddScoped<IServiceManager, ServiceManager>();
     }
 
-    public static IServices ConfigureSqlContext(this IServices services, IConfig config)
+    public static IServices AddDbContext(this IServices services, IConfig config)
     {
         return services.AddDbContext<RepositoryContext>((DbContextOptionsBuilder opts) =>
             opts.UseSqlServer(config.GetConnectionString(Resources.SqlConn)));
     }
     
-    public static IServices ConfigureEmployeeDataShaper(this IServices services)
+    public static IServices AddEmployeeDataShaper(this IServices services)
     {
         return services.AddScoped<IDataShaper<ToClientEmployee>, DataShaper<ToClientEmployee>>();
+    }
+
+    public static IServices AddVersioning(this IServices services)
+    {
+        return services.AddApiVersioning((ApiVersioningOptions opts) =>
+        {
+            opts.ReportApiVersions = true;
+            opts.AssumeDefaultVersionWhenUnspecified = true;
+            opts.DefaultApiVersion = new ApiVersion(majorVersion: 1, minorVersion: 0);
+        }).AddMvc().Services;
     }
 }

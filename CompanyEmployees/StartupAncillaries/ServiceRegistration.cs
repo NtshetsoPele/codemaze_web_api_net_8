@@ -19,13 +19,14 @@ public static class ServiceRegistration
             .AddExceptionHandler<GlobalExceptionHandler>()
             .ConfigureCors()
             .ConfigureIisIntegration()
-            .ConfigureLoggerService()
-            .ConfigureRepositoryManager()
-            .ConfigureServiceManager()
-            .ConfigureSqlContext(builder.Configuration)
-            .ConfigureEmployeeDataShaper()
+            .AddLoggerService()
+            .AddRepositoryManager()
+            .AddServiceManager()
+            .AddDbContext(builder.Configuration)
+            .AddEmployeeDataShaper()
+            .AddVersioning()
             .AddAutoMapper(typeof(MapperAssemblyReference).Assembly)
-            .AddScoped<ValidationFilterAttribute>(); ;
+            .AddScoped<ValidationFilterAttribute>();
     }
 
     private static void AddStandardServices(WebAppBuilder builder)

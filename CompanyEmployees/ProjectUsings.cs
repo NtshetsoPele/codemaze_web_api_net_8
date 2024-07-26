@@ -30,3 +30,4 @@ global using Microsoft.AspNetCore.Mvc;
 global using Presentation.ActionFilters;
 global using Service.DataShaper;
 global using Microsoft.Extensions.Options;
+global using Asp.Versioning;
