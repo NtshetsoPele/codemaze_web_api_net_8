@@ -1,6 +1,6 @@
 ﻿namespace Presentation.Controllers;
 
-[Route(template: "api"), ApiController, ApiVersion(version: "1.0")]
+[Route(template: "api"), ApiController/*, ApiVersion(version: "1.0")*/]
 public class RootController(LinkGenerator linkGenerator) : ControllerBase
 {
     [HttpGet(Name = "GetRoot")]

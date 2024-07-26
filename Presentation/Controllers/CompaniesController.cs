@@ -1,6 +1,6 @@
 ﻿namespace Presentation.Controllers;
 
-[ApiController, Route(template: "api/[controller]"), ApiVersion("1.0")]
+[ApiController, Route(template: "api/[controller]")/*, ApiVersion("1.0")*/]
 public class CompaniesController(IServiceManager service) : ControllerBase
 {
     #region State

@@ -53,11 +53,20 @@ public static class ServiceExtensions
 
     public static IServices AddVersioning(this IServices services)
     {
-        return services.AddApiVersioning((ApiVersioningOptions opts) =>
-        {
-            opts.ReportApiVersions = true;
-            opts.AssumeDefaultVersionWhenUnspecified = true;
-            opts.DefaultApiVersion = new ApiVersion(majorVersion: 1, minorVersion: 0);
-        }).AddMvc().Services;
+        return 
+            services.AddApiVersioning((ApiVersioningOptions opts) =>
+            {
+                opts.ReportApiVersions = true;
+                opts.AssumeDefaultVersionWhenUnspecified = true;
+                opts.DefaultApiVersion = new ApiVersion(majorVersion: 1, minorVersion: 0);
+                opts.ApiVersionReader = new HeaderApiVersionReader(headerName: "api-version");
+            })
+            .AddMvc((MvcApiVersioningOptions opts) =>
+            {
+                opts.Conventions.Controller<CompaniesController>().HasApiVersion(new ApiVersion(1, 0));
+                opts.Conventions.Controller<CompaniesV2Controller>().HasDeprecatedApiVersion(new ApiVersion(2, 0));
+                opts.Conventions.Controller<RootController>().HasApiVersion(new ApiVersion(1, 0));
+            })
+            .Services;
     }
 }
