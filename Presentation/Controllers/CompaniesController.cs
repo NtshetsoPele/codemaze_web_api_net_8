@@ -1,6 +1,7 @@
 ﻿namespace Presentation.Controllers;
 
 [ApiController, Route(template: "api/[controller]"), ApiVersion("1.0")]
+[ResponseCache(CacheProfileName = "120SecondsDuration")] // All actions
 public class CompaniesController(IServiceManager service) : ControllerBase
 {
     #region State
@@ -25,6 +26,7 @@ public class CompaniesController(IServiceManager service) : ControllerBase
     }
 
     [HttpGet(template: "{companyId:guid}", Name = CompanyById)]
+    [ResponseCache(Duration = 60)] // Overrides controller attribute
     public async Task<IActionResult> GetCompanyById([FromRoute] Guid companyId)
     {
         return Ok(await GetCompanyAsync());

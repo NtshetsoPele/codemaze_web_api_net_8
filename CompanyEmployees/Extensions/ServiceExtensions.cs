@@ -53,11 +53,16 @@ public static class ServiceExtensions
 
     public static IServices AddVersioning(this IServices services)
     {
-        return services.AddApiVersioning((ApiVersioningOptions opts) =>
-        {
-            opts.ReportApiVersions = true;
-            opts.AssumeDefaultVersionWhenUnspecified = true;
-            opts.DefaultApiVersion = new ApiVersion(majorVersion: 1, minorVersion: 0);
-        }).AddMvc().Services;
+        return 
+            services.AddApiVersioning((ApiVersioningOptions opts) =>
+            {
+                opts.ReportApiVersions = true;
+                opts.AssumeDefaultVersionWhenUnspecified = true;
+                opts.DefaultApiVersion = new ApiVersion(majorVersion: 1, minorVersion: 0);
+            })
+            .AddMvc()
+            .Services;
     }
+
+    public static IServices ConfigureResponseCaching(this IServices services) => services.AddResponseCaching();
 }

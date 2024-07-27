@@ -25,6 +25,7 @@ public static class ServiceRegistration
             .AddDbContext(builder.Configuration)
             .AddEmployeeDataShaper()
             .AddVersioning()
+            .ConfigureResponseCaching()
             .AddAutoMapper(typeof(MapperAssemblyReference).Assembly)
             .AddScoped<ValidationFilterAttribute>();
     }
@@ -45,6 +46,7 @@ public static class ServiceRegistration
                     .OfType<SystemTextJsonOutputFormatter>()
                     .FirstOrDefault()?.SupportedMediaTypes.Add("application/vnd.my-vendor.apiroot+json");
                 opts.InputFormatters.Insert(0, GetJsonPatchInputFormatter());
+                opts.CacheProfiles.Add("120SecondsDuration", new CacheProfile { Duration = 120 });
             })
             .AddXmlDataContractSerializerFormatters()
             .AddApplicationPart(typeof(PresentationAssemblyReference).Assembly);
