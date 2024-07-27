@@ -1,4 +1,5 @@
-﻿using IServices = Microsoft.Extensions.DependencyInjection.IServiceCollection;
+﻿using Microsoft.AspNetCore.OutputCaching;
+using IServices = Microsoft.Extensions.DependencyInjection.IServiceCollection;
 using IConfig = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace CompanyEmployees.Extensions;
@@ -70,5 +71,18 @@ public static class ServiceExtensions
             .Services;
     }
 
-    public static IServices ConfigureResponseCaching(this IServices services) => services.AddResponseCaching();
+    public static IServices ConfigureResponseCaching(this IServices services)
+    {
+        return services.AddResponseCaching(); // --> Response Caching
+    }
+
+    public static IServices ConfigureOutputCaching(this IServices services)
+    {
+        return services.AddOutputCache((OutputCacheOptions opts) =>
+        {
+            // Applied to all controller actions
+            opts.AddBasePolicy((OutputCachePolicyBuilder builder) => builder.Expire(TimeSpan.FromSeconds(10)));
+            opts.AddPolicy("120SecondsDuration", (OutputCachePolicyBuilder builder) => builder.Expire(TimeSpan.FromSeconds(120)));
+        }); // --> Output Caching
+    }
 }

@@ -19,3 +19,4 @@ global using System.Dynamic;
 global using Entities.LinkModels;
 global using Microsoft.AspNetCore.Routing;
 global using Asp.Versioning;
+global using Microsoft.AspNetCore.OutputCaching;

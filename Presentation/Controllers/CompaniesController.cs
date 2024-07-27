@@ -1,7 +1,8 @@
 ﻿namespace Presentation.Controllers;
 
 [ApiController, Route(template: "api/[controller]"), ApiVersion("1.0")]
-[ResponseCache(CacheProfileName = "120SecondsDuration")] // All actions
+//[ResponseCache(CacheProfileName = "120SecondsDuration")] // All actions --> Response Caching
+[OutputCache(PolicyName = "120SecondsDuration")]
 public class CompaniesController(IServiceManager service) : ControllerBase
 {
     #region State
@@ -26,9 +27,12 @@ public class CompaniesController(IServiceManager service) : ControllerBase
     }
 
     [HttpGet(template: "{companyId:guid}", Name = CompanyById)]
-    [ResponseCache(Duration = 60)] // Overrides controller attribute
+    //[ResponseCache(Duration = 60)] // Overrides controller attribute --> Response Caching
+    [OutputCache(Duration = 60)] // --> Output Caching
     public async Task<IActionResult> GetCompanyById([FromRoute] Guid companyId)
     {
+        HttpContext.Response.Headers.ETag = $"\"{Guid.NewGuid()}\"";
+        
         return Ok(await GetCompanyAsync());
 
         #region Nested_Helpers
