@@ -13,7 +13,7 @@ public class CompaniesController(IServiceManager service) : ControllerBase
 
     #endregion
 
-    [HttpGet(Name = "GetCompanies")]
+    [HttpGet(Name = "GetCompanies"), EnableRateLimiting(policyName: "SpecificPolicy")]
     public async Task<IActionResult> GetAllCompanies()
     {
         return Ok(await GetCompaniesAsync());
@@ -28,7 +28,7 @@ public class CompaniesController(IServiceManager service) : ControllerBase
 
     [HttpGet(template: "{companyId:guid}", Name = CompanyById)]
     //[ResponseCache(Duration = 60)] // Overrides controller attribute --> Response Caching
-    [OutputCache(Duration = 60)] // --> Output Caching
+    [OutputCache(Duration = 180)] // --> Output Caching
     public async Task<IActionResult> GetCompanyById([FromRoute] Guid companyId)
     {
         HttpContext.Response.Headers.ETag = $"\"{Guid.NewGuid()}\"";

@@ -32,3 +32,6 @@ global using Service.DataShaper;
 global using Microsoft.Extensions.Options;
 global using Asp.Versioning;
 global using Presentation.Controllers;
+global using System.Threading.RateLimiting;
+global using Microsoft.AspNetCore.OutputCaching;
+global using Microsoft.AspNetCore.RateLimiting;

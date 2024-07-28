@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.OutputCaching;
-using IServices = Microsoft.Extensions.DependencyInjection.IServiceCollection;
+﻿using IServices = Microsoft.Extensions.DependencyInjection.IServiceCollection;
 using IConfig = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace CompanyEmployees.Extensions;
@@ -82,7 +81,47 @@ public static class ServiceExtensions
         {
             // Applied to all controller actions
             opts.AddBasePolicy((OutputCachePolicyBuilder builder) => builder.Expire(TimeSpan.FromSeconds(10)));
+            // Used for targeted usages
             opts.AddPolicy("120SecondsDuration", (OutputCachePolicyBuilder builder) => builder.Expire(TimeSpan.FromSeconds(120)));
         }); // --> Output Caching
+    }
+
+    public static IServices ConfigureRateLimiting(this IServices services)
+    {
+        return services.AddRateLimiter((RateLimiterOptions opt) =>
+        {
+            // Applies to all endpoints
+            opt.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(partitioner: context =>
+                RateLimitPartition.GetFixedWindowLimiter(
+                    partitionKey: "GlobalLimiter", factory: (string partition) => new FixedWindowRateLimiterOptions
+                        {
+                            AutoReplenishment = true,
+                            PermitLimit = 5,
+                            QueueLimit = 2, // Served in the next window
+                            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                            Window = TimeSpan.FromMinutes(1)
+                        }));
+
+            // Doesn't override the above. 
+            // After the 4th request in 10 seconds, the above takes over
+            opt.AddPolicy("SpecificPolicy", partitioner: (HttpContext context) =>
+                RateLimitPartition.GetFixedWindowLimiter(partitionKey: "SpecificLimiter",
+                    factory: (string partition) => new FixedWindowRateLimiterOptions
+                    {
+                        AutoReplenishment = true,
+                        PermitLimit = 3,
+                        Window = TimeSpan.FromSeconds(10)
+                    }));
+
+            //opt.RejectionStatusCode = 429;
+            opt.OnRejected = async (OnRejectedContext context, CancellationToken token) =>
+            {
+                context.HttpContext.Response.StatusCode = 429;
+                var errorMessage = context.Lease.TryGetMetadata(MetadataName.RetryAfter, out TimeSpan retryAfter) 
+                    ? $"Too many requests. Please try again after { retryAfter.TotalSeconds } second(s)." 
+                    : "Too many requests. Please try again later.";
+                await context.HttpContext.Response.WriteAsync(errorMessage, token);
+            };
+        });
     }
 }

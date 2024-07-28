@@ -27,6 +27,7 @@ public static class ServiceRegistration
             .AddVersioning()
             //.ConfigureResponseCaching() --> Response Caching
             .ConfigureOutputCaching()
+            .ConfigureRateLimiting()
             .AddAutoMapper(typeof(MapperAssemblyReference).Assembly)
             .AddScoped<ValidationFilterAttribute>();
     }
