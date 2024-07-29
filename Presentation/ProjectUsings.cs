@@ -21,3 +21,4 @@ global using Microsoft.AspNetCore.Routing;
 global using Asp.Versioning;
 global using Microsoft.AspNetCore.OutputCaching;
 global using Microsoft.AspNetCore.RateLimiting;
+global using Microsoft.AspNetCore.Identity;

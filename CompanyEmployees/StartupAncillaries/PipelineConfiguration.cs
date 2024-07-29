@@ -22,6 +22,7 @@ public static class PipelineConfiguration
         //app.UseResponseCaching(); --> Response Caching
         app.UseOutputCache(); // --> Output Caching
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapControllers();

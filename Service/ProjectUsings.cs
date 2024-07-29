@@ -16,3 +16,5 @@ global using Shared.DTOs;
 global using Shared.RequestFeatures;
 global using System.Dynamic;
 global using System.Reflection;
+global using Microsoft.AspNetCore.Identity;
+global using Microsoft.Extensions.Configuration;

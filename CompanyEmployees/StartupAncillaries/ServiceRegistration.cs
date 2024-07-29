@@ -28,6 +28,8 @@ public static class ServiceRegistration
             //.ConfigureResponseCaching() --> Response Caching
             .ConfigureOutputCaching()
             .ConfigureRateLimiting()
+            .AddAuth()
+            .ConfigureIdentity()
             .AddAutoMapper(typeof(MapperAssemblyReference).Assembly)
             .AddScoped<ValidationFilterAttribute>();
     }

@@ -10,3 +10,4 @@ global using System.Reflection;
 global using System.Text;
 global using System.Linq.Dynamic.Core;
 global using Repository.Extensions.Utilities;
+global using Microsoft.AspNetCore.Identity.EntityFrameworkCore;

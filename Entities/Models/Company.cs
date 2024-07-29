@@ -2,7 +2,6 @@
 
 public sealed class Company
 {
-    //[Column(name: "CompanyId")]
     public required Guid CompanyId { get; init; }
     
     [Required(ErrorMessage = "Company name is required.")]

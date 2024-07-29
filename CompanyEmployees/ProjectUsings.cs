@@ -35,3 +35,5 @@ global using Presentation.Controllers;
 global using System.Threading.RateLimiting;
 global using Microsoft.AspNetCore.OutputCaching;
 global using Microsoft.AspNetCore.RateLimiting;
+global using Entities.Models;
+global using Microsoft.AspNetCore.Identity;

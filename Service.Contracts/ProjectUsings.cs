@@ -9,3 +9,4 @@ global using Shared.DTOs;
 global using Entities.Models;
 global using Shared.RequestFeatures;
 global using System.Dynamic;
+global using Microsoft.AspNetCore.Identity;

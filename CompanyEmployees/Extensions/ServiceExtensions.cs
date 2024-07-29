@@ -88,33 +88,33 @@ public static class ServiceExtensions
 
     public static IServices ConfigureRateLimiting(this IServices services)
     {
-        return services.AddRateLimiter((RateLimiterOptions opt) =>
+        return services.AddRateLimiter((RateLimiterOptions opts) =>
         {
             // Applies to all endpoints
-            opt.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(partitioner: context =>
+            opts.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(partitioner: context =>
                 RateLimitPartition.GetFixedWindowLimiter(
                     partitionKey: "GlobalLimiter", factory: (string partition) => new FixedWindowRateLimiterOptions
                         {
-                            AutoReplenishment = true,
-                            PermitLimit = 5,
+                            AutoReplenishment = true, // Default value
+                            PermitLimit = 30,
                             QueueLimit = 2, // Served in the next window
-                            QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                            QueueProcessingOrder = QueueProcessingOrder.OldestFirst, // Default value
                             Window = TimeSpan.FromMinutes(1)
                         }));
 
             // Doesn't override the above. 
             // After the 4th request in 10 seconds, the above takes over
-            opt.AddPolicy("SpecificPolicy", partitioner: (HttpContext context) =>
+            opts.AddPolicy("SpecificPolicy", partitioner: (HttpContext context) =>
                 RateLimitPartition.GetFixedWindowLimiter(partitionKey: "SpecificLimiter",
                     factory: (string partition) => new FixedWindowRateLimiterOptions
                     {
-                        AutoReplenishment = true,
+                        AutoReplenishment = true, 
                         PermitLimit = 3,
                         Window = TimeSpan.FromSeconds(10)
                     }));
 
             //opt.RejectionStatusCode = 429;
-            opt.OnRejected = async (OnRejectedContext context, CancellationToken token) =>
+            opts.OnRejected = async (OnRejectedContext context, CancellationToken token) =>
             {
                 context.HttpContext.Response.StatusCode = 429;
                 var errorMessage = context.Lease.TryGetMetadata(MetadataName.RetryAfter, out TimeSpan retryAfter) 
@@ -123,5 +123,28 @@ public static class ServiceExtensions
                 await context.HttpContext.Response.WriteAsync(errorMessage, token);
             };
         });
+    }
+
+    public static IServices AddAuth(this IServices services)
+    {
+        return services.AddAuthentication().Services;
+    }
+
+    public static IServices ConfigureIdentity(this IServices services)
+    {
+        return 
+            services
+                .AddIdentity<User, IdentityRole>((IdentityOptions opts) =>
+                {
+                    opts.Password.RequireDigit = true;
+                    opts.Password.RequireLowercase = false;
+                    opts.Password.RequireUppercase = false;
+                    opts.Password.RequireNonAlphanumeric = false;
+                    opts.Password.RequiredLength = 10;
+                    opts.User.RequireUniqueEmail = true;
+                })
+                .AddEntityFrameworkStores<RepositoryContext>()
+                .AddDefaultTokenProviders()
+                .Services;
     }
 }
