@@ -1,7 +1,7 @@
 ﻿namespace Presentation.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route(template: "api/[controller]")]
 public class AuthenticationController(IServiceManager services) : ControllerBase
 {
     [HttpPost]
@@ -15,7 +15,7 @@ public class AuthenticationController(IServiceManager services) : ControllerBase
         }
         foreach (IdentityError error in result.Errors)
         {
-            ModelState.TryAddModelError(error.Code, error.Description);
+            ModelState.TryAddModelError(key: error.Code, error.Description);
         }
         return BadRequest(ModelState);
     }

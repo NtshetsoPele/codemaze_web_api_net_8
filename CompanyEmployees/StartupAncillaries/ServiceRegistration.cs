@@ -30,6 +30,7 @@ public static class ServiceRegistration
             .ConfigureRateLimiting()
             .AddAuth()
             .ConfigureIdentity()
+            .ConfigureJwt(builder.Configuration)
             .AddAutoMapper(typeof(MapperAssemblyReference).Assembly)
             .AddScoped<ValidationFilterAttribute>();
     }

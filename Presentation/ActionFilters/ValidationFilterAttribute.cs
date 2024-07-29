@@ -41,7 +41,7 @@ public class ValidationFilterAttribute : IActionFilter
 
     private static void AssignBadRequestResponse(ActionExecutingContext context, object? controller, object? action)
     {
-        context.Result = new BadRequestObjectResult($"Payload is null. Controller: {controller}, action: {action}");
+        context.Result = new BadRequestObjectResult($"Payload is null. Controller: '{controller}', action: '{action}'.");
     }
 
     private static void AssignUnprocessableEntityResponse(ActionExecutingContext context)

@@ -1,5 +1,9 @@
-﻿using IServices = Microsoft.Extensions.DependencyInjection.IServiceCollection;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using IServices = Microsoft.Extensions.DependencyInjection.IServiceCollection;
 using IConfig = Microsoft.Extensions.Configuration.IConfiguration;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 
 namespace CompanyEmployees.Extensions;
 
@@ -146,5 +150,32 @@ public static class ServiceExtensions
                 .AddEntityFrameworkStores<RepositoryContext>()
                 .AddDefaultTokenProviders()
                 .Services;
+    }
+
+    public static IServices ConfigureJwt(this IServices services, IConfig config)
+    {
+        IConfigurationSection jwtSettings = config.GetSection(key: "JwtSettings");
+        string secretKey = Environment.GetEnvironmentVariable("SECRET") 
+                           ?? throw new KeyNotFoundException("JWT key not found.");
+
+        return services.AddAuthentication(configureOptions: (AuthenticationOptions opt) =>
+        {
+            opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer((JwtBearerOptions options) =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = jwtSettings["validIssuer"],
+                ValidAudience = jwtSettings["validAudience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+            };
+        })
+        .Services;
     }
 }
